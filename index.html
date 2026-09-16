@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FRAME — Custom Websites That Drive Results</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sans: ['Inter','system-ui','sans-serif'], mono: ['JetBrains Mono','monospace'] },
+      colors: {
+        dark: '#0F1419',
+        darker: '#0B0F13',
+        card: '#1A242E',
+        cardHover: '#1E2C39',
+        line: '#22303E',
+        accent: '#06B6D4',
+        accentHover: '#0891B2',
+      }
+    }
+  }
+}
+</script>
+<style>
+*{scroll-behavior:smooth}
+body{background:#0F1419;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.gradient-text{background:linear-gradient(90deg,#06B6D4 0%,#22D3EE 50%,#67E8F9 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.grid-pattern{background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0);background-size:32px 32px}
+.glass{backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.reveal{opacity:0;transform:translateY(18px);transition: all .7s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.card-hover{transition: all .3s cubic-bezier(.16,1,.3,1)}
+.card-hover:hover{transform:translateY(-6px);border-color:rgba(6,182,214,.5);background:#1E2C39;box-shadow:0 20px 40px -12px rgba(0,0,0,.5), 0 0 0 1px rgba(6,182,214,.15)}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:#0F1419}
+::-webkit-scrollbar-thumb{background:#22303E;border-radius:999px}
+::-webkit-scrollbar-thumb:hover{background:#2A3A4D}
+::selection{background:#06B6D4;color:#0F1419}
+</style>
+</head>
+<body class="bg-dark overflow-x-hidden">
+<!-- Toast -->
+<div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] hidden">
+  <div class="bg-white text-dark px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 text-sm font-semibold">
+    <span class="w-7 h-7 rounded-full bg-emerald-500 text-white grid place-items-center">✓</span>
+    <span id="toastMsg">Message sent successfully!</span>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav id="navbar" class="fixed top-0 inset-x-0 z-50 border-b border-white/[0.06] bg-dark/70 glass">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-8 h-[68px] flex items-center justify-between">
+    <a href="#" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg bg-accent grid place-items-center font-black text-dark text-[15px] tracking-tighter">F■</div>
+      <span class="font-extrabold tracking-[-0.03em] text-white text-[18px]">FRAME</span>
+      <span class="hidden sm:inline text-white/40 text-[11px] tracking-[0.2em] font-semibold ml-1 border-l border-white/10 pl-3">DIGITAL STUDIO</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8 text-[13.5px] font-medium">
+      <a href="#work" class="text-white/70 hover:text-white transition">Work</a>
+      <a href="#services" class="text-white/70 hover:text-white transition">Services</a>
+      <a href="#pricing" class="text-white/70 hover:text-white transition">Pricing</a>
+      <a href="#contact" class="text-white/70 hover:text-white transition">Contact</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="#contact" class="hidden md:inline-flex bg-accent hover:bg-cyan-400 text-dark font-bold text-[13.5px] px-6 py-[10px] rounded-full transition">Let's Talk →</a>
+      <button id="menuBtn" class="md:hidden w-10 h-10 rounded-full border border-white/10 grid place-items-center text-white">
+        <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><path d="M1 1H17M1 7H17M1 13H17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="hidden md:hidden border-t border-white/10 bg-card">
+    <div class="px-6 py-6 flex flex-col gap-4 text-sm font-medium">
+      <a href="#work" class="text-white/80 py-2">Work</a>
+      <a href="#services" class="text-white/80 py-2">Services</a>
+      <a href="#pricing" class="text-white/80 py-2">Pricing</a>
+      <a href="#contact" class="bg-accent text-dark font-bold px-5 py-3 rounded-full text-center mt-2">Let's Talk →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="relative pt-[68px] overflow-hidden">
+  <div class="absolute inset-0 grid-pattern opacity-60 pointer-events-none"></div>
+  <div class="absolute -top-40 right-[-10%] w-[720px] h-[720px] rounded-full opacity-[0.08] pointer-events-none" style="background:radial-gradient(circle, #06B6D4 0%, transparent 70%)"></div>
+  <div class="absolute top-[40%] left-[-10%] w-[500px] h-[500px] rounded-full opacity-[0.05] pointer-events-none" style="background:radial-gradient(circle, #22D3EE 0%, transparent 70%)"></div>
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-8 relative">
+    <div class="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-8 items-center py-12 lg:py-[72px]">
+      <!-- Left -->
+      <div class="reveal visible">
+        <div class="inline-flex items-center gap-2 bg-white/[0.06] border border-white/[0.08] rounded-full px-3 py-1.5 text-xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-white/80 font-medium">Available for new projects</span>
+          <span class="text-white/30">—</span>
+          <span class="text-white font-semibold">Q1 2027</span>
+        </div>
+        <h1 class="mt-6 font-black tracking-[-0.04em] leading-[0.9] text-[42px] sm:text-[56px] lg:text-[68px] text-white">
+          Custom<br>
+          websites that<br>
+          <span class="gradient-text">drive results.</span>
+        </h1>
+        <p class="mt-5 text-[16.5px] leading-relaxed text-white/60 max-w-[520px]">
+          I help ambitious brands turn ideas into high-performing digital experiences. Strategy, design, and code — under one roof.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#work" class="inline-flex items-center gap-2 bg-accent hover:bg-cyan-400 text-dark font-bold px-7 py-3.5 rounded-full transition text-[14px]">View Work <span>↗</span></a>
+          <a href="#contact" class="inline-flex items-center gap-2 bg-white text-dark font-bold px-7 py-3.5 rounded-full hover:bg-white/90 transition text-[14px]">Start a Project</a>
+        </div>
+        <div class="mt-10 flex items-center gap-6 border-t border-white/10 pt-6">
+          <div class="flex -space-x-2">
+            <img src="https://i.pravatar.cc/100?img=11" class="w-8 h-8 rounded-full border-2 border-dark object-cover">
+            <img src="https://i.pravatar.cc/100?img=32" class="w-8 h-8 rounded-full border-2 border-dark object-cover">
+            <img src="https://i.pravatar.cc/100?img=15" class="w-8 h-8 rounded-full border-2 border-dark object-cover">
+          </div>
+          <div class="text-xs leading-tight">
+            <div class="flex items-center gap-1 text-amber-400">★★★★★ <span class="text-white font-bold ml-1">4.9/5</span></div>
+            <div class="text-white/50">Trusted by 120+ clients worldwide</div>
+          </div>
+          <div class="hidden sm:flex items-center gap-6 ml-auto text-center">
+            <div><div class="text-white font-black text-lg leading-none">120+</div><div class="text-white/40 text-[10px] tracking-widest font-semibold">PROJECTS</div></div>
+            <div><div class="text-white font-black text-lg leading-none">98%</div><div class="text-white/40 text-[10px] tracking-widest font-semibold">SATISFACTION</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- Right Visual -->
+      <div class="relative lg:pl-6 reveal visible" style="transition-delay:.12s">
+        <div class="relative bg-card border border-line rounded-[24px] overflow-hidden shadow-2xl">
+          <!-- Browser bar -->
+          <div class="h-11 flex items-center gap-2 px-4 border-b border-line bg-[#141C23]">
+            <div class="flex gap-1.5"><span class="w-3 h-3 rounded-full bg-red-500"></span><span class="w-3 h-3 rounded-full bg-yellow-400"></span><span class="w-3 h-3 rounded-full bg-green-500"></span></div>
+            <div class="ml-4 flex-1 bg-dark rounded-full h-7 flex items-center px-3 text-[11px] text-white/40 gap-2"><span class="w-3 h-3 rounded-full bg-white/10"></span> frame.studio — Preview</div>
+          </div>
+          <div class="p-4 sm:p-5 bg-gradient-to-b from-card to-darker">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=500&fit=crop" class="w-full h-[220px] sm:h-[260px] object-cover rounded-xl border border-white/5">
+            <div class="grid grid-cols-3 gap-3 mt-4">
+              <div class="bg-dark border border-line rounded-xl p-3">
+                <div class="text-[10px] tracking-widest font-bold text-white/40">REVENUE</div>
+                <div class="text-white font-black text-lg">$84.2k</div>
+                <div class="text-emerald-400 text-xs font-bold">↑ 34.2%</div>
+              </div>
+              <div class="bg-dark border border-line rounded-xl p-3">
+                <div class="text-[10px] tracking-widest font-bold text-white/40">CONVERSION</div>
+                <div class="text-white font-black text-lg">4.8%</div>
+                <div class="text-emerald-400 text-xs font-bold">↑ 12.5%</div>
+              </div>
+              <div class="bg-accent rounded-xl p-3 text-dark">
+                <div class="text-[10px] tracking-widest font-bold opacity-60">PERFORMANCE</div>
+                <div class="font-black text-lg">98/100</div>
+                <div class="text-xs font-bold">Lighthouse</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Floating badges -->
+        <div class="absolute -left-2 sm:-left-4 top-[18%] bg-white text-dark rounded-2xl px-3 py-3 shadow-xl flex items-center gap-3 border border-black/5">
+          <div class="w-9 h-9 rounded-xl bg-dark grid place-items-center text-white"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <div><div class="text-xs font-extrabold leading-none">Page Speed</div><div class="text-[11px] text-black/50 font-medium">+50% faster load</div></div>
+        </div>
+        <div class="absolute -right-2 sm:-right-3 bottom-[18%] bg-white text-dark rounded-2xl px-4 py-3 shadow-xl">
+          <div class="text-[11px] font-bold tracking-widest text-black/40">CLIENTS TRUST US</div>
+          <div class="flex items-center gap-2 mt-1">
+            <div class="flex -space-x-1"><span class="w-6 h-6 rounded-full bg-slate-800 border-2 border-white grid place-items-center text-[8px] text-white font-black">A</span><span class="w-6 h-6 rounded-full bg-cyan-500 border-2 border-white grid place-items-center text-[8px] text-white font-black">B</span><span class="w-6 h-6 rounded-full bg-violet-600 border-2 border-white grid place-items-center text-[8px] text-white font-black">C</span></div>
+            <span class="text-xs font-bold">+ 120 happy clients</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Logos strip -->
+<div class="border-y border-white/[0.06] bg-white/[0.02]">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-8 py-5 flex flex-wrap items-center justify-between gap-6 opacity-50">
+    <span class="text-[11px] tracking-[0.2em] font-bold text-white/50">TRUSTED BY INNOVATORS</span>
+    <div class="flex flex-wrap items-center gap-8 text-white font-bold tracking-tight text-sm">
+      <span class="flex items-center gap-2"><span class="w-6 h-6 rounded bg-white/10 grid place-items-center text-xs">◈</span> NEXUS</span>
+      <span class="flex items-center gap-2"><span class="w-6 h-6 rounded bg-white/10 grid place-items-center text-xs">⬢</span> BLOOM</span>
+      <span>ATLAS & CO.</span>
+      <span class="flex items-center gap-2"><span class="w-6 h-6 rounded-full border border-white/20 grid place-items-center text-[10px]">○</span> LUMEN</span>
+      <span>VERTEX</span>
+    </div>
+  </div>
+</div>
+
+<!-- Services -->
+<section id="services" class="max-w-[1200px] mx-auto px-6 lg:px-8 py-16 lg:py-24">
+  <div class="flex flex-wrap justify-between items-end gap-6">
+    <div>
+      <div class="text-accent font-mono text-xs tracking-widest font-bold">01 — SERVICES</div>
+      <h2 class="mt-3 font-black tracking-[-0.03em] text-white text-[32px] sm:text-[42px] leading-none">Built for growth,<br>designed to convert.</h2>
+    </div>
+    <p class="text-white/50 max-w-[380px] text-[14.5px] leading-relaxed">Every service is tailored to your goals — no templates, no shortcuts. Just strategic design that works.</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
+    <!-- Card 1 -->
+    <div class="reveal bg-card border border-line rounded-[20px] p-6 card-hover">
+      <div class="w-10 h-10 rounded-xl bg-[#0F1419] border border-line grid place-items-center text-lg">🎨</div>
+      <h3 class="mt-4 font-bold text-white text-[16px]">Custom Web Design</h3>
+      <p class="mt-2 text-[13.5px] leading-relaxed text-white/50">Bespoke designs that capture your brand and captivate your audience. Figma to reality.</p>
+      <a href="#contact" class="mt-4 inline-flex text-accent text-xs font-bold tracking-widest hover:text-cyan-300">LEARN MORE →</a>
+    </div>
+    <div class="reveal bg-card border border-line rounded-[20px] p-6 card-hover" style="transition-delay:.05s">
+      <div class="w-10 h-10 rounded-xl bg-[#0F1419] border border-line grid place-items-center text-lg">⚡</div>
+      <h3 class="mt-4 font-bold text-white text-[16px]">Development</h3>
+      <p class="mt-2 text-[13.5px] leading-relaxed text-white/50">Lightning-fast, clean code built for performance, SEO and scale. Next.js & modern stack.</p>
+      <a href="#contact" class="mt-4 inline-flex text-accent text-xs font-bold tracking-widest hover:text-cyan-300">LEARN MORE →</a>
+    </div>
+    <div class="reveal bg-card border border-line rounded-[20px] p-6 card-hover" style="transition-delay:.1s">
+      <div class="w-10 h-10 rounded-xl bg-[#0F1419] border border-line grid place-items-center text-lg">🛒</div>
+      <h3 class="mt-4 font-bold text-white text-[16px]">E-commerce</h3>
+      <p class="mt-2 text-[13.5px] leading-relaxed text-white/50">Stores that sell. Seamless checkout, inventory and payments that drive revenue.</p>
+      <a href="#contact" class="mt-4 inline-flex text-accent text-xs font-bold tracking-widest hover:text-cyan-300">LEARN MORE →</a>
+    </div>
+    <div class="reveal bg-card border border-line rounded-[20px] p-6 card-hover">
+      <div class="w-10 h-10 rounded-xl bg-[#0F1419] border border-line grid place-items-center text-lg">🚀</div>
+      <h3 class="mt-4 font-bold text-white text-[16px]">Performance</h3>
+      <p class="mt-2 text-[13.5px] leading-relaxed text-white/50">Core Web Vitals 95+ guaranteed. Speed is a feature — and a ranking factor.</p>
+      <a href="#contact" class="mt-4 inline-flex text-accent text-xs font-bold tracking-widest hover:text-cyan-300">LEARN MORE →</a>
+    </div>
+    <div class="reveal bg-card border border-line rounded-[20px] p-6 card-hover" style="transition-delay:.05s">
+      <div class="w-10 h-10 rounded-xl bg-[#0F1419] border border-line grid place-items-center text-lg">💎</div>
+      <h3 class="mt-4 font-bold text-white text-[16px]">Brand Strategy</h3>
+      <p class="mt-2 text-[13.5px] leading-relaxed text-white/50">Positioning, voice and visuals aligned to make you unmistakable in your market.</p>
+      <a href="#contact" class="mt-4 inline-flex text-accent text-xs font-bold tracking-widest hover:text-cyan-300">LEARN MORE →</a>
+    </div>
+    <div class="reveal bg-card border border-line rounded-[20px] p-6 card-hover" style="transition-delay:.1s">
+      <div class="w-10 h-10 rounded-xl bg-[#0F1419] border border-line grid place-items-center text-lg">🛡️</div>
+      <h3 class="mt-4 font-bold text-white text-[16px]">Ongoing Support</h3>
+      <p class="mt-2 text-[13.5px] leading-relaxed text-white/50">Launch is day one. Updates, monitoring and growth experiments included.</p>
+      <a href="#contact" class="mt-4 inline-flex text-accent text-xs font-bold tracking-widest hover:text-cyan-300">LEARN MORE →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Portfolio -->
+<section id="work" class="bg-[#0B0F13] border-y border-white/[0.06]">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-8 py-16 lg:py-20">
+    <div class="flex flex-wrap justify-between items-end gap-6">
+      <div>
+        <div class="text-accent font-mono text-xs tracking-widest font-bold">02 — SELECTED WORK</div>
+        <h2 class="mt-3 font-black tracking-[-0.03em] text-white text-[32px] sm:text-[42px] leading-none">Real results for<br>ambitious brands.</h2>
+      </div>
+      <div class="flex gap-2 flex-wrap" id="filters">
+        <button data-filter="all" class="filter-btn active bg-white text-dark font-bold px-4 py-2 rounded-full text-xs">All</button>
+        <button data-filter="web" class="filter-btn bg-white/10 border border-white/10 text-white/70 hover:text-white font-semibold px-4 py-2 rounded-full text-xs">Web Design</button>
+        <button data-filter="ecommerce" class="filter-btn bg-white/10 border border-white/10 text-white/70 hover:text-white font-semibold px-4 py-2 rounded-full text-xs">E-commerce</button>
+        <button data-filter="saas" class="filter-btn bg-white/10 border border-white/10 text-white/70 hover:text-white font-semibold px-4 py-2 rounded-full text-xs">SaaS</button>
+      </div>
+    </div>
+
+    <div id="portfolioGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
+      <!-- Project 1 -->
+      <article data-cat="saas" class="portfolio-card group bg-card border border-line rounded-[20px] overflow-hidden card-hover cursor-pointer">
+        <div class="relative h-[190px] overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <span class="absolute top-3 left-3 bg-accent text-dark text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full">↗ +34% CONVERSION</span>
+        </div>
+        <div class="p-5">
+          <div class="flex gap-2 text-[10px] font-bold tracking-widest text-white/40"><span>SAAS</span><span>•</span><span>2024</span></div>
+          <h3 class="font-bold text-white mt-1">Flow Finance</h3>
+          <p class="text-white/50 text-[13px] mt-1 leading-relaxed">Fintech dashboard rebuilt for clarity and trust. Onboarding time cut in half.</p>
+          <div class="mt-3 flex gap-2"><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Next.js</span><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Fintech</span></div>
+        </div>
+      </article>
+      <!-- Project 2 -->
+      <article data-cat="ecommerce" class="portfolio-card group bg-card border border-line rounded-[20px] overflow-hidden card-hover cursor-pointer">
+        <div class="relative h-[190px] overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <span class="absolute top-3 left-3 bg-emerald-400 text-dark text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full">↗ 2.8X REVENUE</span>
+        </div>
+        <div class="p-5">
+          <div class="flex gap-2 text-[10px] font-bold tracking-widest text-white/40"><span>E-COMMERCE</span><span>•</span><span>2024</span></div>
+          <h3 class="font-bold text-white mt-1">Maison Atelier</h3>
+          <p class="text-white/50 text-[13px] mt-1 leading-relaxed">Luxury fashion store with headless commerce. Average order value +41%.</p>
+          <div class="mt-3 flex gap-2"><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Shopify</span><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Fashion</span></div>
+        </div>
+      </article>
+      <!-- Project 3 -->
+      <article data-cat="saas" class="portfolio-card group bg-card border border-line rounded-[20px] overflow-hidden card-hover cursor-pointer">
+        <div class="relative h-[190px] overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <span class="absolute top-3 left-3 bg-violet-400 text-dark text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full">↗ +50% PERFORMANCE</span>
+        </div>
+        <div class="p-5">
+          <div class="flex gap-2 text-[10px] font-bold tracking-widest text-white/40"><span>SAAS</span><span>•</span><span>2023</span></div>
+          <h3 class="font-bold text-white mt-1">Metric Labs</h3>
+          <p class="text-white/50 text-[13px] mt-1 leading-relaxed">Analytics platform with real-time insights. 10k+ active teams now onboard.</p>
+          <div class="mt-3 flex gap-2"><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">React</span><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Analytics</span></div>
+        </div>
+      </article>
+      <!-- Project 4 -->
+      <article data-cat="web" class="portfolio-card group bg-card border border-line rounded-[20px] overflow-hidden card-hover cursor-pointer">
+        <div class="relative h-[190px] overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <span class="absolute top-3 left-3 bg-amber-400 text-dark text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full">↗ +67% ENGAGEMENT</span>
+        </div>
+        <div class="p-5">
+          <div class="flex gap-2 text-[10px] font-bold tracking-widest text-white/40"><span>HOSPITALITY</span><span>•</span><span>2023</span></div>
+          <h3 class="font-bold text-white mt-1">Sora Dining</h3>
+          <p class="text-white/50 text-[13px] mt-1 leading-relaxed">Restaurant collective with immersive storytelling and seamless reservations.</p>
+          <div class="mt-3 flex gap-2"><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Web Design</span><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Hospitality</span></div>
+        </div>
+      </article>
+      <!-- Project 5 -->
+      <article data-cat="web" class="portfolio-card group bg-card border border-line rounded-[20px] overflow-hidden card-hover cursor-pointer">
+        <div class="relative h-[190px] overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&h=400&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <span class="absolute top-3 left-3 bg-cyan-300 text-dark text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full">↗ -41% BOUNCE RATE</span>
+        </div>
+        <div class="p-5">
+          <div class="flex gap-2 text-[10px] font-bold tracking-widest text-white/40"><span>ARCHITECTURE</span><span>•</span><span>2023</span></div>
+          <h3 class="font-bold text-white mt-1">Studio North</h3>
+          <p class="text-white/50 text-[13px] mt-1 leading-relaxed">Architecture portfolio that lets work breathe. Awards press coverage +3x.</p>
+          <div class="mt-3 flex gap-2"><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Minimal</span><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Portfolio</span></div>
+        </div>
+      </article>
+      <!-- Project 6 -->
+      <article data-cat="ecommerce" class="portfolio-card group bg-card border border-line rounded-[20px] overflow-hidden card-hover cursor-pointer">
+        <div class="relative h-[190px] overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <span class="absolute top-3 left-3 bg-white text-dark text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full">↗ 3.5K NEW LEADS</span>
+        </div>
+        <div class="p-5">
+          <div class="flex gap-2 text-[10px] font-bold tracking-widest text-white/40"><span>AGENCY</span><span>•</span><span>2024</span></div>
+          <h3 class="font-bold text-white mt-1">Brightside Co.</h3>
+          <p class="text-white/50 text-[13px] mt-1 leading-relaxed">Creative agency site that actually converts. Lead form completion +58%.</p>
+          <div class="mt-3 flex gap-2"><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Webflow</span><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Agency</span></div>
+        </div>
+      </article>
+    </div>
+    <div class="text-center mt-8">
+      <button id="viewAllBtn" class="text-sm font-bold text-white/60 hover:text-white border border-white/10 hover:border-white/20 rounded-full px-6 py-2.5 transition">View full archive →</button>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing" class="max-w-[1200px] mx-auto px-6 lg:px-8 py-16 lg:py-24">
+  <div class="text-center max-w-2xl mx-auto">
+    <div class="text-accent font-mono text-xs tracking-widest font-bold">03 — PRICING</div>
+    <h2 class="mt-3 font-black tracking-[-0.03em] text-white text-[32px] sm:text-[44px] leading-none">Transparent pricing.<br>No surprises.</h2>
+    <p class="mt-4 text-white/50 text-[14.5px]">Choose the level that fits where you are — upgrade as you grow.</p>
+    <div class="mt-6 inline-flex bg-card border border-line rounded-full p-1">
+      <button id="billMonthly" class="bg-white text-dark font-bold px-5 py-2 rounded-full text-sm shadow">Monthly</button>
+      <button id="billYearly" class="text-white/60 font-semibold px-5 py-2 rounded-full text-sm">Yearly <span class="text-emerald-400 font-bold">— 20% off</span></button>
+    </div>
+  </div>
+
+  <div class="grid lg:grid-cols-3 gap-6 mt-10 items-start">
+    <!-- Starter -->
+    <div class="bg-card border border-line rounded-[24px] p-7">
+      <h3 class="font-bold text-white text-lg">Starter</h3>
+      <p class="text-white/50 text-sm mt-1">Perfect for launching quickly.</p>
+      <div class="mt-5 flex items-baseline gap-1"><span class="text-white font-black text-[36px] tracking-tighter price" data-monthly="2499" data-yearly="1999">$2,499</span><span class="text-white/40 text-sm">/ project</span></div>
+      <p class="text-white/30 text-xs mt-1">One-time. Own everything.</p>
+      <a href="#contact" class="mt-6 block text-center bg-white text-dark font-bold py-3 rounded-full hover:bg-white/90 transition text-sm">Get Started</a>
+      <ul class="mt-6 space-y-3 text-[13px] text-white/70">
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> 5-page custom design</li>
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> CMS + blog setup</li>
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Basic SEO & analytics</li>
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> 2 weeks support</li>
+        <li class="flex gap-2 text-white/30"><span>✕</span> Advanced animations</li>
+      </ul>
+    </div>
+    <!-- Professional Popular -->
+    <div class="bg-card border-2 border-accent rounded-[24px] p-7 relative lg:scale-[1.02] shadow-[0_0_40px_rgba(6,182,214,0.15)]">
+      <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-dark text-[11px] font-black tracking-widest px-4 py-1 rounded-full">MOST POPULAR</span>
+      <h3 class="font-bold text-white text-lg flex items-center gap-2">Professional <span class="w-2 h-2 rounded-full bg-emerald-400"></span></h3>
+      <p class="text-white/50 text-sm mt-1">For brands ready to scale.</p>
+      <div class="mt-5 flex items-baseline gap-1"><span class="text-white font-black text-[36px] tracking-tighter price" data-monthly="5499" data-yearly="4399">$5,499</span><span class="text-white/40 text-sm">/ project</span></div>
+      <p class="text-white/30 text-xs mt-1">One-time. Own everything.</p>
+      <a href="#contact" class="mt-6 block text-center bg-accent hover:bg-cyan-400 text-dark font-bold py-3 rounded-full transition text-sm">Get Started →</a>
+      <ul class="mt-6 space-y-3 text-[13px] text-white/70">
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> 10-page custom design</li>
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Custom animations & interactions</li>
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Advanced SEO & performance 95+</li>
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> E-commerce or membership</li>
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> 60 days support & training</li>
+      </ul>
+    </div>
+    <!-- Enterprise -->
+    <div class="bg-card border border-line rounded-[24px] p-7">
+      <h3 class="font-bold text-white text-lg">Enterprise</h3>
+      <p class="text-white/50 text-sm mt-1">Custom solutions, no limits.</p>
+      <div class="mt-5 flex items-baseline gap-1"><span class="text-white font-black text-[36px] tracking-tighter">Custom</span></div>
+      <p class="text-white/30 text-xs mt-1">Tailored to your needs.</p>
+      <a href="#contact" class="mt-6 block text-center bg-white/10 border border-white/10 text-white font-bold py-3 rounded-full hover:bg-white/15 transition text-sm">Book a Call</a>
+      <ul class="mt-6 space-y-3 text-[13px] text-white/70">
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Unlimited pages & features</li>
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Design system & component library</li>
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Integrations & automation</li>
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Dedicated Slack & priority support</li>
+        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Ongoing optimization</li>
+      </ul>
+    </div>
+  </div>
+  <p class="text-center text-white/30 text-xs mt-6">Need something different? <a href="#contact" class="text-accent underline underline-offset-4">Let's build a custom package.</a></p>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="bg-gradient-to-b from-[#0B0F13] to-[#0F1419] border-t border-white/[0.06]">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-8 py-16 lg:py-20">
+    <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10">
+      <!-- Form -->
+      <div class="bg-card border border-line rounded-[24px] p-6 sm:p-8">
+        <h3 class="font-black tracking-[-0.03em] text-white text-[26px] leading-none">Let's build something<br>great together.</h3>
+        <p class="text-white/50 text-sm mt-3">Tell me about your project. I'll reply within 24 hours.</p>
+        <form id="contactForm" class="mt-6 space-y-4" novalidate>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-[11px] tracking-widest font-bold text-white/50">YOUR NAME</label>
+              <input required id="name" placeholder="Alex Morgan" class="mt-1.5 w-full bg-dark border border-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/20">
+              <p class="hidden text-red-400 text-xs mt-1" data-err="name">Please enter your name.</p>
+            </div>
+            <div>
+              <label class="text-[11px] tracking-widest font-bold text-white/50">EMAIL ADDRESS</label>
+              <input required id="email" type="email" placeholder="alex@company.com" class="mt-1.5 w-full bg-dark border border-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/20">
+              <p class="hidden text-red-400 text-xs mt-1" data-err="email">Please enter a valid email.</p>
+            </div>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-[11px] tracking-widest font-bold text-white/50">PROJECT TYPE</label>
+              <select id="projectType" class="mt-1.5 w-full bg-dark border border-line rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-accent/50">
+                <option>Select a service</option><option>Web Design</option><option>Development</option><option>E-commerce</option><option>Brand Strategy</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[11px] tracking-widest font-bold text-white/50">BUDGET RANGE</label>
+              <select id="budget" class="mt-1.5 w-full bg-dark border border-line rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-accent/50">
+                <option>$2k — $5k</option><option>$5k — $10k</option><option>$10k — $25k</option><option>$25k+</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="text-[11px] tracking-widest font-bold text-white/50">PROJECT DETAILS</label>
+            <textarea id="details" rows="4" placeholder="Tell me about your goals, timeline, and what success looks like..." class="mt-1.5 w-full bg-dark border border-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/20 resize-none"></textarea>
+          </div>
+          <button type="submit" class="w-full bg-accent hover:bg-cyan-400 text-dark font-black py-4 rounded-full transition text-sm tracking-wide">Send Message →</button>
+          <p class="text-center text-white/30 text-xs">By sending, you agree to our privacy policy. No spam, ever.</p>
+        </form>
+      </div>
+      <!-- Info -->
+      <div class="space-y-6">
+        <div class="bg-gradient-to-br from-accent to-cyan-500 rounded-[24px] p-7 text-dark">
+          <div class="w-10 h-10 rounded-xl bg-dark text-white grid place-items-center">✦</div>
+          <h4 class="font-black text-xl tracking-tight mt-4 leading-none">Prefer to talk directly?</h4>
+          <p class="text-dark/70 text-sm mt-2 leading-relaxed">Book a free 30-min strategy call. No pitch, just honest advice on your next step.</p>
+          <div class="mt-6 space-y-3 text-sm font-semibold">
+            <a href="mailto:hello@frame.studio" class="flex items-center gap-3 bg-dark text-white rounded-full px-4 py-3"><span class="w-8 h-8 rounded-full bg-white/10 grid place-items-center text-xs">✉</span> hello@frame.studio</a>
+            <a href="tel:+14155552671" class="flex items-center gap-3 bg-white rounded-full px-4 py-3"><span class="w-8 h-8 rounded-full bg-dark text-white grid place-items-center text-xs">☎</span> +1 (415) 555-2671</a>
+          </div>
+          <button onclick="showToast('Calendar opened — pick a time that works for you!')" class="mt-4 w-full bg-dark text-white font-bold py-3 rounded-full text-sm">Schedule a Call →</button>
+        </div>
+        <div class="bg-card border border-line rounded-[24px] p-6">
+          <h4 class="font-bold text-white">What happens next?</h4>
+          <ol class="mt-4 space-y-4">
+            <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-accent text-dark grid place-items-center text-xs font-black">1</span><div><div class="text-white font-semibold text-sm">Quick reply</div><div class="text-white/50 text-xs">Within 24h with clear next steps.</div></div></li>
+            <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-white/10 text-white grid place-items-center text-xs font-black">2</span><div><div class="text-white font-semibold text-sm">Discovery call</div><div class="text-white/50 text-xs">30 min to align on goals & scope.</div></div></li>
+            <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-white/10 text-white grid place-items-center text-xs font-black">3</span><div><div class="text-white font-semibold text-sm">Proposal</div><div class="text-white/50 text-xs">Fixed price, timeline & deliverables.</div></div></li>
+          </ol>
+        </div>
+        <div class="flex items-center gap-3 text-xs text-white/40">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Avg. response time: 3 hours • 4.9/5 from 47 reviews
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t border-white/10 bg-darker">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-8 py-10">
+    <div class="flex flex-col md:flex-row justify-between gap-8">
+      <div>
+        <div class="flex items-center gap-2 font-black tracking-tight text-white"><span class="w-8 h-8 rounded-lg bg-accent text-dark grid place-items-center text-xs">F■</span> FRAME</div>
+        <p class="text-white/40 text-sm mt-3 max-w-[320px] leading-relaxed">Custom websites that drive results. Strategy, design and code for ambitious brands.</p>
+      </div>
+      <div class="flex gap-10 text-sm">
+        <div><div class="font-bold text-white mb-3">Explore</div><div class="space-y-2 text-white/50"><a href="#work" class="block hover:text-white">Work</a><a href="#services" class="block hover:text-white">Services</a><a href="#pricing" class="block hover:text-white">Pricing</a></div></div>
+        <div><div class="font-bold text-white mb-3">Connect</div><div class="space-y-2 text-white/50"><a href="#" class="block hover:text-white">Twitter</a><a href="#" class="block hover:text-white">LinkedIn</a><a href="#" class="block hover:text-white">Dribbble</a></div></div>
+        <div><div class="font-bold text-white mb-3">Contact</div><div class="space-y-2 text-white/50"><a href="mailto:hello@frame.studio" class="block hover:text-white">hello@frame.studio</a><span class="block">San Francisco, CA</span></div></div>
+      </div>
+    </div>
+    <div class="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-3 text-xs text-white/30">
+      <span>© 2026 FRAME Studio. All rights reserved.</span>
+      <span class="flex gap-4"><a href="#" class="hover:text-white">Privacy</a><a href="#" class="hover:text-white">Terms</a><span>Crafted with precision in SF</span></span>
+    </div>
+  </div>
+</footer>
+
+<!-- Project Modal -->
+<div id="modal" class="fixed inset-0 z-[80] hidden">
+  <div id="modalBg" class="absolute inset-0 bg-dark/80 backdrop-blur-sm"></div>
+  <div class="relative max-w-[720px] mx-auto mt-10 sm:mt-20 bg-card border border-line rounded-[24px] overflow-hidden shadow-2xl mx-4">
+    <img id="modalImg" src="" class="w-full h-[280px] object-cover">
+    <div class="p-6 sm:p-8">
+      <div id="modalCat" class="text-accent font-mono text-xs tracking-widest font-bold">SAAS • 2024</div>
+      <h3 id="modalTitle" class="font-black text-white text-2xl mt-2">Flow Finance</h3>
+      <p id="modalDesc" class="text-white/60 mt-3 leading-relaxed">Extended case study with challenges, process and measurable outcomes. Includes before/after performance, conversion lifts and testimonial.</p>
+      <div class="mt-6 flex gap-3">
+        <a href="#contact" onclick="closeModal()" class="bg-accent text-dark font-bold px-6 py-3 rounded-full text-sm">Start Similar Project →</a>
+        <button onclick="closeModal()" class="border border-white/10 text-white px-6 py-3 rounded-full text-sm font-semibold hover:bg-white/5">Close</button>
+      </div>
+    </div>
+    <button onclick="closeModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-dark/80 border border-white/10 text-white grid place-items-center hover:bg-dark">✕</button>
+  </div>
+</div>
+
+<script>
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+menuBtn.addEventListener('click', ()=> mobileMenu.classList.toggle('hidden'));
+
+const toast = document.getElementById('toast');
+const toastMsg = document.getElementById('toastMsg');
+function showToast(msg){
+  toastMsg.textContent = msg;
+  toast.classList.remove('hidden');
+  setTimeout(()=> toast.classList.add('hidden'), 2800);
+}
+
+// Filters
+const filterBtns = document.querySelectorAll('.filter-btn');
+const cards = document.querySelectorAll('.portfolio-card');
+filterBtns.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    filterBtns.forEach(b=>{
+      b.className='filter-btn bg-white/10 border border-white/10 text-white/70 hover:text-white font-semibold px-4 py-2 rounded-full text-xs';
+    });
+    btn.className='filter-btn active bg-white text-dark font-bold px-4 py-2 rounded-full text-xs';
+    const f = btn.dataset.filter;
+    cards.forEach(c=>{
+      const cat = c.dataset.cat;
+      const show = f==='all' || cat===f;
+      c.style.display = show ? '' : 'none';
+      if(show){ c.animate([{opacity:0, transform:'translateY(8px)'},{opacity:1, transform:'translateY(0)'}], {duration:300, easing:'ease-out'}) }
+    });
+  });
+});
+
+// Pricing toggle
+const billMonthly = document.getElementById('billMonthly');
+const billYearly = document.getElementById('billYearly');
+const prices = document.querySelectorAll('.price');
+function setBilling(mode){
+  if(mode==='monthly'){
+    billMonthly.className='bg-white text-dark font-bold px-5 py-2 rounded-full text-sm shadow';
+    billYearly.className='text-white/60 font-semibold px-5 py-2 rounded-full text-sm';
+    prices.forEach(p=> p.textContent = '$' + Number(p.dataset.monthly).toLocaleString());
+  } else {
+    billYearly.className='bg-white text-dark font-bold px-5 py-2 rounded-full text-sm shadow';
+    billMonthly.className='text-white/60 font-semibold px-5 py-2 rounded-full text-sm';
+    prices.forEach(p=> p.textContent = '$' + Number(p.dataset.yearly).toLocaleString());
+  }
+}
+billMonthly.addEventListener('click', ()=> setBilling('monthly'));
+billYearly.addEventListener('click', ()=> setBilling('yearly'));
+
+// Reveal observer
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible') });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=> observer.observe(el));
+
+// Form
+const form = document.getElementById('contactForm');
+form.addEventListener('submit', e=>{
+  e.preventDefault();
+  let ok = true;
+  const name = document.getElementById('name');
+  const email = document.getElementById('email');
+  document.querySelectorAll('[data-err]').forEach(el=> el.classList.add('hidden'));
+  if(!name.value.trim()){ document.querySelector('[data-err="name"]').classList.remove('hidden'); ok=false; name.focus(); }
+  else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)){ document.querySelector('[data-err="email"]').classList.remove('hidden'); ok=false; email.focus(); }
+  if(!ok) return;
+  showToast('Message sent — I\'ll reply within 24 hours!');
+  form.reset();
+});
+
+// Modal
+const modal = document.getElementById('modal');
+const modalImg = document.getElementById('modalImg');
+const modalTitle = document.getElementById('modalTitle');
+const modalDesc = document.getElementById('modalDesc');
+const modalCat = document.getElementById('modalCat');
+function openModal(card){
+  const img = card.querySelector('img').src;
+  const title = card.querySelector('h3').textContent;
+  const desc = card.querySelector('p').textContent;
+  const cat = card.querySelector('.text-\\[10px\\]').textContent;
+  modalImg.src = img;
+  modalTitle.textContent = title;
+  modalCat.textContent = cat;
+  modalDesc.textContent = desc + ' — Full case study includes research, wireframes, design system, development notes and post-launch metrics. Let\'s build the next success story together.';
+  modal.classList.remove('hidden');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  modal.classList.add('hidden');
+  document.body.style.overflow='';
+}
+document.querySelectorAll('.portfolio-card').forEach(c=> c.addEventListener('click', ()=> openModal(c)));
+document.getElementById('modalBg').addEventListener('click', closeModal);
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+document.getElementById('viewAllBtn').addEventListener('click', ()=>{
+  showToast('Full archive coming soon — 24+ projects!');
+});
+
+// Navbar scroll
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', ()=>{
+  if(window.scrollY>10) navbar.classList.add('shadow-lg');
+  else navbar.classList.remove('shadow-lg');
+});
+
+// Close mobile on link
+document.querySelectorAll('#mobileMenu a').forEach(a=> a.addEventListener('click', ()=> mobileMenu.classList.add('hidden')));
+</script>
+</body>
+</html>
