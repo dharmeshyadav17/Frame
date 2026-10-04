@@ -3,625 +3,449 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FRAME — Custom Websites That Drive Results</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: { sans: ['Inter','system-ui','sans-serif'], mono: ['JetBrains Mono','monospace'] },
-      colors: {
-        dark: '#0F1419',
-        darker: '#0B0F13',
-        card: '#1A242E',
-        cardHover: '#1E2C39',
-        line: '#22303E',
-        accent: '#06B6D4',
-        accentHover: '#0891B2',
-      }
-    }
-  }
-}
+<title>ARMENU.ART — Taste in Augmented Reality</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}
 </script>
 <style>
-*{scroll-behavior:smooth}
-body{background:#0F1419;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-.gradient-text{background:linear-gradient(90deg,#06B6D4 0%,#22D3EE 50%,#67E8F9 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.grid-pattern{background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0);background-size:32px 32px}
-.glass{backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-.reveal{opacity:0;transform:translateY(18px);transition: all .7s cubic-bezier(.16,1,.3,1)}
-.reveal.visible{opacity:1;transform:translateY(0)}
-.card-hover{transition: all .3s cubic-bezier(.16,1,.3,1)}
-.card-hover:hover{transform:translateY(-6px);border-color:rgba(6,182,214,.5);background:#1E2C39;box-shadow:0 20px 40px -12px rgba(0,0,0,.5), 0 0 0 1px rgba(6,182,214,.15)}
-::-webkit-scrollbar{width:8px;height:8px}
-::-webkit-scrollbar-track{background:#0F1419}
-::-webkit-scrollbar-thumb{background:#22303E;border-radius:999px}
-::-webkit-scrollbar-thumb:hover{background:#2A3A4D}
-::selection{background:#06B6D4;color:#0F1419}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#08080c;--bg2:#111116;--cream:#FFF6E9;--muted:#a9a49b;--orange:#FF4D00;--orange2:#FF8A00;--pink:#FF5C9E;--lime:#D8FF3E;--glass:rgba(255,246,233,.07);--line:rgba(255,246,233,.14)}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:'Space Grotesk',sans-serif;overflow-x:hidden;cursor:none}
+@media(pointer:coarse){body{cursor:auto}.cursor-dot,.cursor-ring{display:none!important}}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:none}
+@media(pointer:coarse){button{cursor:pointer}}
+::selection{background:var(--orange);color:#000}
+/* PRELOADER */
+#preloader{position:fixed;inset:0;background:#050507;z-index:9999;display:flex;flex-direction:column;justify-content:center;align-items:center;transition:transform .9s cubic-bezier(.76,0,.24,1)}
+#preloader.hide{transform:translateY(-100%)}
+.pre-logo{font-family:'Syne';font-weight:800;font-size:clamp(2rem,6vw,4.5rem);letter-spacing:-.02em}
+.pre-logo span{color:var(--orange)}
+.pre-sub{font-family:'Playfair Display';font-style:italic;color:var(--muted);margin-top:.4rem;letter-spacing:.15em;text-transform:uppercase;font-size:.8rem}
+.pre-bar{width:min(420px,70vw);height:2px;background:rgba(255,255,255,.12);margin:2rem 0 1rem;overflow:hidden;border-radius:99px}
+.pre-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--orange),var(--pink),var(--lime))}
+.pre-count{font-size:.9rem;letter-spacing:.3em;color:var(--muted)}
+/* WEBGL */
+#webgl{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+.bg-glow{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(60vw 60vw at 70% 20%,rgba(255,77,0,.18),transparent 60%),radial-gradient(50vw 50vw at 15% 80%,rgba(255,92,158,.14),transparent 60%),radial-gradient(40vw 40vw at 50% 50%,rgba(216,255,62,.06),transparent 60%)}
+.grain{position:fixed;inset:-50%;width:200%;height:200%;z-index:50;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 8s steps(10) infinite}
+@keyframes grain{0%,100%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-2%)}80%{transform:translate(3%,3%)}}
+/* CURSOR */
+.cursor-dot{position:fixed;width:8px;height:8px;background:var(--orange);border-radius:50%;z-index:99999;pointer-events:none;transform:translate(-50%,-50%)}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(255,77,0,.7);border-radius:50%;z-index:99998;pointer-events:none;transform:translate(-50%,-50%);transition:width .25s,height .25s,background .25s;display:flex;align-items:center;justify-content:center;font-size:.6rem;letter-spacing:.1em}
+.cursor-ring.hover{width:84px;height:84px;background:rgba(255,77,0,.12);backdrop-filter:blur(4px)}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.1rem 2rem;background:linear-gradient(to bottom,rgba(8,8,12,.85),transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.logo{font-family:'Syne';font-weight:800;font-size:1.3rem;letter-spacing:-.02em;display:flex;align-items:center;gap:.6rem}
+.logo-mark{width:34px;height:34px;border-radius:50%;background:conic-gradient(from 0deg,var(--orange),var(--pink),var(--lime),var(--orange));display:grid;place-items:center;color:#000;font-size:1.1rem;animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.nav-links{display:flex;gap:2rem;font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.nav-links a{position:relative;transition:color .3s}
+.nav-links a:hover{color:var(--cream)}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--orange);transition:width .3s}
+.nav-links a:hover::after{width:100%}
+.btn{border:1px solid var(--line);background:var(--glass);color:var(--cream);padding:.85rem 1.6rem;border-radius:99px;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;display:inline-flex;align-items:center;gap:.6rem;transition:.35s;backdrop-filter:blur(10px)}
+.btn-solid{background:var(--cream);color:#000;border-color:var(--cream)}
+.btn-orange{background:var(--orange);border-color:var(--orange);color:#000;font-weight:600}
+.btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 10px 30px rgba(255,77,0,.35)}
+.burger{display:none;background:none;border:1px solid var(--line);color:var(--cream);width:44px;height:44px;border-radius:50%;font-size:1.2rem}
+/* LAYOUT */
+main{position:relative;z-index:2}
+section{position:relative;padding:6rem 2rem;max-width:1300px;margin:0 auto}
+.eyebrow{display:inline-flex;align-items:center;gap:.6rem;font-size:.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--orange);border:1px solid rgba(255,77,0,.35);padding:.5rem 1rem;border-radius:99px;background:rgba(255,77,0,.08);margin-bottom:1.5rem}
+.dot{width:7px;height:7px;background:var(--lime);border-radius:50%;box-shadow:0 0 12px var(--lime);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.3;transform:scale(.7)}}
+/* HERO */
+#hero{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:2rem;padding-top:8rem;max-width:1400px}
+.hero-kicker{font-family:'Playfair Display';font-style:italic;font-size:clamp(1.1rem,2vw,1.5rem);color:var(--muted)}
+.hero-kicker em{color:var(--cream)}
+h1{font-family:'Syne';font-weight:800;line-height:.88;letter-spacing:-.04em;font-size:clamp(3.2rem,8.5vw,7.8rem);margin:1rem 0;text-transform:uppercase}
+h1 .line{display:block;overflow:hidden}
+h1 .line span{display:inline-block}
+h1 .outline{color:transparent;-webkit-text-stroke:1.5px var(--cream)}
+h1 .grad{background:linear-gradient(90deg,var(--orange) 10%,var(--pink) 50%,var(--lime) 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-desc{color:var(--muted);max-width:46ch;line-height:1.7;font-size:1.02rem}
+.hero-desc strong{color:var(--cream)}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem}
+.hero-meta{display:flex;gap:2.5rem;margin-top:3rem;border-top:1px solid var(--line);padding-top:1.5rem}
+.meta-num{font-family:'Syne';font-size:1.9rem;font-weight:800}
+.meta-label{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.hero-visual{position:relative;height:620px;display:flex;align-items:center;justify-content:center}
+.dish-card{position:relative;width:min(420px,86vw);background:rgba(17,17,22,.72);border:1px solid var(--line);border-radius:28px;backdrop-filter:blur(20px);padding:1.2rem;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.dish-img-wrap{border-radius:18px;overflow:hidden;position:relative;height:280px}
+.dish-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .8s}
+.dish-card:hover img{transform:scale(1.08)}
+.scan{position:absolute;inset:12px;border:1px solid rgba(255,255,255,.25);border-radius:14px;pointer-events:none}
+.scan::before,.scan::after{content:'';position:absolute;width:28px;height:28px;border:2px solid var(--lime)}
+.scan::before{top:-2px;left:-2px;border-right:0;border-bottom:0;border-radius:8px 0 0 0}
+.scan::after{bottom:-2px;right:-2px;border-left:0;border-top:0;border-radius:0 0 8px 0}
+.scan-line{position:absolute;left:12px;right:12px;height:2px;background:var(--lime);box-shadow:0 0 18px var(--lime);animation:scan 2.8s ease-in-out infinite}
+@keyframes scan{0%,100%{top:18px}50%{top:calc(100% - 20px)}}
+.dish-info{display:flex;justify-content:space-between;align-items:end;margin-top:1rem}
+.dish-name{font-family:'Syne';font-size:1.6rem;font-weight:800}
+.dish-tag{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--orange)}
+.dish-price{font-family:'Syne';font-size:1.4rem;color:var(--lime)}
+.dish-nav{display:flex;gap:.6rem;margin-top:1rem}
+.dish-nav button{flex:1;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--cream);padding:.9rem;transition:.3s}
+.dish-nav button:hover,.dish-nav button.active{background:var(--orange);color:#000;border-color:var(--orange)}
+.badge-rotate{position:absolute;top:-40px;right:-10px;width:130px;height:130px;z-index:3}
+.badge-rotate svg{width:100%;height:100%;animation:spin 12s linear infinite}
+.badge-center{position:absolute;inset:0;display:grid;place-items:center;font-size:1.8rem}
+.hint{position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);background:rgba(0,0,0,.6);border:1px solid var(--line);padding:.6rem 1.1rem;border-radius:99px;backdrop-filter:blur(8px)}
+/* MARQUEE */
+.marquee-full{max-width:none;padding:0;overflow:hidden}
+.marquee{transform:rotate(-1.5deg);background:var(--orange);color:#000;border-top:2px solid #000;border-bottom:2px solid #000;overflow:hidden;white-space:nowrap;padding:.9rem 0;margin:2rem 0}
+.marquee-track{display:inline-flex;gap:2rem;animation:marq 18s linear infinite;font-family:'Syne';font-weight:800;font-size:1.4rem;letter-spacing:-.02em}
+.marquee-track span:nth-child(even){font-family:'Playfair Display';font-style:italic;font-weight:500}
+@keyframes marq{to{transform:translateX(-50%)}}
+.marquee2{background:var(--cream);transform:rotate(1deg)}
+/* GRID */
+.sec-title{font-family:'Syne';font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95;letter-spacing:-.03em;text-transform:uppercase;margin:.8rem 0 1rem}
+.sec-title i{font-family:'Playfair Display';text-transform:none;font-weight:500;color:var(--orange)}
+.sec-sub{color:var(--muted);max-width:60ch;line-height:1.7}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:3rem}
+.m-card{background:linear-gradient(180deg,rgba(255,246,233,.09),rgba(255,246,233,.02));border:1px solid var(--line);border-radius:24px;overflow:hidden;transform-style:preserve-3d;transition:box-shadow .4s;position:relative}
+.m-card:hover{box-shadow:0 20px 60px rgba(255,77,0,.25)}
+.m-card img{width:100%;height:240px;object-fit:cover}
+.m-body{padding:1.3rem}
+.m-top{display:flex;justify-content:space-between;align-items:center}
+.m-cat{font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--lime)}
+.m-price{background:var(--lime);color:#000;font-weight:700;padding:.25rem .8rem;border-radius:99px;font-size:.9rem}
+.m-name{font-family:'Syne';font-size:1.4rem;margin:.6rem 0 .4rem}
+.m-desc{font-size:.9rem;color:var(--muted);line-height:1.6}
+.m-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.1rem}
+.order{border:none;background:var(--cream);color:#000;padding:.7rem 1.2rem;border-radius:99px;font-weight:600;font-size:.8rem;letter-spacing:.08em;transition:.3s}
+.order:hover{background:var(--orange)}
+.ar-mini{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+/* AR */
+#ar{background:linear-gradient(180deg,transparent,rgba(255,77,0,.07),transparent);border-top:1px solid var(--line);border-bottom:1px solid var(--line);max-width:none}
+.ar-inner{max-width:1300px;margin:0 auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:3rem;align-items:center}
+.phone{width:min(300px,80vw);height:610px;margin:0 auto;background:#000;border:8px solid #222;border-radius:44px;position:relative;overflow:hidden;box-shadow:0 0 0 1px var(--line),0 40px 100px rgba(0,0,0,.6),0 0 80px rgba(255,77,0,.25)}
+.phone img{width:100%;height:100%;object-fit:cover;opacity:.9}
+.phone-ui{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.4),transparent 30%,transparent 70%,rgba(0,0,0,.7));display:flex;flex-direction:column;justify-content:space-between;padding:1.2rem}
+.notch{width:110px;height:26px;background:#000;border-radius:99px;margin:0 auto;border:1px solid #333}
+.ar-tag{align-self:center;background:rgba(0,0,0,.6);border:1px solid var(--lime);color:var(--lime);font-size:.7rem;letter-spacing:.2em;padding:.5rem 1rem;border-radius:99px;backdrop-filter:blur(8px)}
+.cal{font-size:.7rem;color:#fff;letter-spacing:.1em;display:flex;justify-content:space-between}
+.feat{display:flex;gap:1.2rem;padding:1.4rem 0;border-bottom:1px solid var(--line)}
+.feat-num{font-family:'Syne';color:transparent;-webkit-text-stroke:1px var(--orange);font-size:1.8rem;font-weight:800;min-width:60px}
+.feat h4{font-family:'Syne';font-size:1.1rem;margin-bottom:.3rem}
+.feat p{color:var(--muted);font-size:.92rem;line-height:1.6}
+/* GALLERY */
+.gal{display:grid;grid-template-columns:1.2fr .8fr .8fr;grid-template-rows:260px 260px;gap:1rem;margin-top:2.5rem}
+.gal div{border-radius:20px;overflow:hidden;position:relative;border:1px solid var(--line)}
+.gal div:first-child{grid-row:span 2}
+.gal img{width:100%;height:100%;object-fit:cover;transition:transform .7s}
+.gal div:hover img{transform:scale(1.07)}
+.gal label{position:absolute;bottom:12px;left:12px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);padding:.4rem .9rem;border-radius:99px;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;border:1px solid var(--line)}
+/* CTA FOOTER */
+footer{position:relative;z-index:2;border-top:1px solid var(--line);background:#050507;padding:5rem 2rem 2rem;text-align:center;overflow:hidden}
+.foot-big{font-family:'Syne';font-weight:800;font-size:clamp(2.8rem,9vw,7rem);line-height:.9;letter-spacing:-.04em;text-transform:uppercase}
+.foot-big span{background:linear-gradient(90deg,var(--orange),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.foot-row{display:flex;justify-content:space-between;max-width:1300px;margin:3rem auto 0;color:var(--muted);font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;flex-wrap:wrap;gap:1rem}
+/* DOCK */
+#dock{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:.9rem;background:rgba(12,12,16,.75);border:1px solid var(--line);backdrop-filter:blur(18px);padding:.6rem .9rem;border-radius:99px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+#dock .d-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--cream);display:grid;place-items:center;font-size:.9rem;transition:.3s}
+#dock .d-btn.active,#dock .d-btn:hover{background:var(--cream);color:#000}
+#dock input[type=range]{width:90px;accent-color:var(--orange)}
+.d-label{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+/* MODAL */
+#modal{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);display:none;place-items:center;padding:1rem}
+#modal.open{display:grid}
+.modal-card{background:#111116;border:1px solid var(--line);border-radius:24px;max-width:420px;width:100%;padding:2rem;text-align:center}
+.qr{width:180px;height:180px;margin:1.2rem auto;background:#fff;border-radius:16px;display:grid;grid-template-columns:repeat(9,1fr);gap:2px;padding:12px}
+.qr i{background:#000;border-radius:1px}
+.qr i.w{background:#fff}
+/* TOAST */
+#toast{position:fixed;top:90px;right:20px;z-index:300;background:var(--lime);color:#000;padding:.9rem 1.3rem;border-radius:14px;font-weight:600;font-size:.85rem;transform:translateX(150%);transition:.5s cubic-bezier(.2,.9,.2,1)}
+#toast.show{transform:none}
+#mobileMenu{position:fixed;inset:0;background:rgba(8,8,12,.97);z-index:150;display:none;place-items:center;text-align:center}
+#mobileMenu.open{display:grid}
+#mobileMenu a{display:block;font-family:'Syne';font-size:2.5rem;margin:.6rem 0;text-transform:uppercase}
+.reveal{opacity:0;transform:translateY(40px)}
+@media(max-width:980px){
+#hero{grid-template-columns:1fr;padding-top:7rem}
+.hero-visual{height:540px}
+.nav-links{display:none}.burger{display:block}
+.menu-grid{grid-template-columns:1fr 1fr}.ar-inner{grid-template-columns:1fr}.gal{grid-template-columns:1fr 1fr;grid-template-rows:200px 200px 200px}
+#dock{width:92vw;justify-content:space-between;overflow-x:auto}
+}
+@media(max-width:620px){.menu-grid{grid-template-columns:1fr}section{padding:4rem 1.2rem}nav{padding:.9rem 1rem}.hero-meta{gap:1.2rem;flex-wrap:wrap}}
 </style>
 </head>
-<body class="bg-dark overflow-x-hidden">
-<!-- Toast -->
-<div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] hidden">
-  <div class="bg-white text-dark px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 text-sm font-semibold">
-    <span class="w-7 h-7 rounded-full bg-emerald-500 text-white grid place-items-center">✓</span>
-    <span id="toastMsg">Message sent successfully!</span>
-  </div>
-</div>
+<body>
 
-<!-- Nav -->
-<nav id="navbar" class="fixed top-0 inset-x-0 z-50 border-b border-white/[0.06] bg-dark/70 glass">
-  <div class="max-w-[1200px] mx-auto px-6 lg:px-8 h-[68px] flex items-center justify-between">
-    <a href="#" class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-lg bg-accent grid place-items-center font-black text-dark text-[15px] tracking-tighter">F■</div>
-      <span class="font-extrabold tracking-[-0.03em] text-white text-[18px]">FRAME</span>
-      <span class="hidden sm:inline text-white/40 text-[11px] tracking-[0.2em] font-semibold ml-1 border-l border-white/10 pl-3">DIGITAL STUDIO</span>
-    </a>
-    <div class="hidden md:flex items-center gap-8 text-[13.5px] font-medium">
-      <a href="#work" class="text-white/70 hover:text-white transition">Work</a>
-      <a href="#services" class="text-white/70 hover:text-white transition">Services</a>
-      <a href="#pricing" class="text-white/70 hover:text-white transition">Pricing</a>
-      <a href="#contact" class="text-white/70 hover:text-white transition">Contact</a>
-    </div>
-    <div class="flex items-center gap-3">
-      <a href="#contact" class="hidden md:inline-flex bg-accent hover:bg-cyan-400 text-dark font-bold text-[13.5px] px-6 py-[10px] rounded-full transition">Let's Talk →</a>
-      <button id="menuBtn" class="md:hidden w-10 h-10 rounded-full border border-white/10 grid place-items-center text-white">
-        <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><path d="M1 1H17M1 7H17M1 13H17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-  </div>
-  <!-- Mobile Menu -->
-  <div id="mobileMenu" class="hidden md:hidden border-t border-white/10 bg-card">
-    <div class="px-6 py-6 flex flex-col gap-4 text-sm font-medium">
-      <a href="#work" class="text-white/80 py-2">Work</a>
-      <a href="#services" class="text-white/80 py-2">Services</a>
-      <a href="#pricing" class="text-white/80 py-2">Pricing</a>
-      <a href="#contact" class="bg-accent text-dark font-bold px-5 py-3 rounded-full text-center mt-2">Let's Talk →</a>
-    </div>
-  </div>
+<div id="preloader"><div class="pre-logo">armenu<span>.art</span></div><div class="pre-sub">plating the future — in AR</div><div class="pre-bar"><div class="pre-fill" id="preFill"></div></div><div class="pre-count" id="preCount">00%</div></div>
+
+<canvas id="webgl"></canvas>
+<div class="bg-glow"></div>
+<div class="grain"></div>
+<div class="cursor-dot" id="cDot"></div>
+<div class="cursor-ring" id="cRing"></div>
+<div id="toast">Added to AR tray ✦</div>
+
+<nav>
+<div class="logo"><div class="logo-mark">◍</div> armenu.art</div>
+<div class="nav-links"><a href="#hero">Experience</a><a href="#menu">Menu 3D</a><a href="#ar">AR View</a><a href="#gallery">Gallery</a></div>
+<div style="display:flex;gap:.6rem;align-items:center"><a href="#" class="btn btn-orange magnetic" id="tryArBtn" style="padding:.7rem 1.3rem">Try AR ✦</a><button class="burger" id="burger">☰</button></div>
 </nav>
 
-<!-- Hero -->
-<section class="relative pt-[68px] overflow-hidden">
-  <div class="absolute inset-0 grid-pattern opacity-60 pointer-events-none"></div>
-  <div class="absolute -top-40 right-[-10%] w-[720px] h-[720px] rounded-full opacity-[0.08] pointer-events-none" style="background:radial-gradient(circle, #06B6D4 0%, transparent 70%)"></div>
-  <div class="absolute top-[40%] left-[-10%] w-[500px] h-[500px] rounded-full opacity-[0.05] pointer-events-none" style="background:radial-gradient(circle, #22D3EE 0%, transparent 70%)"></div>
-  <div class="max-w-[1200px] mx-auto px-6 lg:px-8 relative">
-    <div class="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-8 items-center py-12 lg:py-[72px]">
-      <!-- Left -->
-      <div class="reveal visible">
-        <div class="inline-flex items-center gap-2 bg-white/[0.06] border border-white/[0.08] rounded-full px-3 py-1.5 text-xs">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="text-white/80 font-medium">Available for new projects</span>
-          <span class="text-white/30">—</span>
-          <span class="text-white font-semibold">Q1 2027</span>
-        </div>
-        <h1 class="mt-6 font-black tracking-[-0.04em] leading-[0.9] text-[42px] sm:text-[56px] lg:text-[68px] text-white">
-          Custom<br>
-          websites that<br>
-          <span class="gradient-text">drive results.</span>
-        </h1>
-        <p class="mt-5 text-[16.5px] leading-relaxed text-white/60 max-w-[520px]">
-          I help ambitious brands turn ideas into high-performing digital experiences. Strategy, design, and code — under one roof.
-        </p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <a href="#work" class="inline-flex items-center gap-2 bg-accent hover:bg-cyan-400 text-dark font-bold px-7 py-3.5 rounded-full transition text-[14px]">View Work <span>↗</span></a>
-          <a href="#contact" class="inline-flex items-center gap-2 bg-white text-dark font-bold px-7 py-3.5 rounded-full hover:bg-white/90 transition text-[14px]">Start a Project</a>
-        </div>
-        <div class="mt-10 flex items-center gap-6 border-t border-white/10 pt-6">
-          <div class="flex -space-x-2">
-            <img src="https://i.pravatar.cc/100?img=11" class="w-8 h-8 rounded-full border-2 border-dark object-cover">
-            <img src="https://i.pravatar.cc/100?img=32" class="w-8 h-8 rounded-full border-2 border-dark object-cover">
-            <img src="https://i.pravatar.cc/100?img=15" class="w-8 h-8 rounded-full border-2 border-dark object-cover">
-          </div>
-          <div class="text-xs leading-tight">
-            <div class="flex items-center gap-1 text-amber-400">★★★★★ <span class="text-white font-bold ml-1">4.9/5</span></div>
-            <div class="text-white/50">Trusted by 120+ clients worldwide</div>
-          </div>
-          <div class="hidden sm:flex items-center gap-6 ml-auto text-center">
-            <div><div class="text-white font-black text-lg leading-none">120+</div><div class="text-white/40 text-[10px] tracking-widest font-semibold">PROJECTS</div></div>
-            <div><div class="text-white font-black text-lg leading-none">98%</div><div class="text-white/40 text-[10px] tracking-widest font-semibold">SATISFACTION</div></div>
-          </div>
-        </div>
-      </div>
-      <!-- Right Visual -->
-      <div class="relative lg:pl-6 reveal visible" style="transition-delay:.12s">
-        <div class="relative bg-card border border-line rounded-[24px] overflow-hidden shadow-2xl">
-          <!-- Browser bar -->
-          <div class="h-11 flex items-center gap-2 px-4 border-b border-line bg-[#141C23]">
-            <div class="flex gap-1.5"><span class="w-3 h-3 rounded-full bg-red-500"></span><span class="w-3 h-3 rounded-full bg-yellow-400"></span><span class="w-3 h-3 rounded-full bg-green-500"></span></div>
-            <div class="ml-4 flex-1 bg-dark rounded-full h-7 flex items-center px-3 text-[11px] text-white/40 gap-2"><span class="w-3 h-3 rounded-full bg-white/10"></span> frame.studio — Preview</div>
-          </div>
-          <div class="p-4 sm:p-5 bg-gradient-to-b from-card to-darker">
-            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=500&fit=crop" class="w-full h-[220px] sm:h-[260px] object-cover rounded-xl border border-white/5">
-            <div class="grid grid-cols-3 gap-3 mt-4">
-              <div class="bg-dark border border-line rounded-xl p-3">
-                <div class="text-[10px] tracking-widest font-bold text-white/40">REVENUE</div>
-                <div class="text-white font-black text-lg">$84.2k</div>
-                <div class="text-emerald-400 text-xs font-bold">↑ 34.2%</div>
-              </div>
-              <div class="bg-dark border border-line rounded-xl p-3">
-                <div class="text-[10px] tracking-widest font-bold text-white/40">CONVERSION</div>
-                <div class="text-white font-black text-lg">4.8%</div>
-                <div class="text-emerald-400 text-xs font-bold">↑ 12.5%</div>
-              </div>
-              <div class="bg-accent rounded-xl p-3 text-dark">
-                <div class="text-[10px] tracking-widest font-bold opacity-60">PERFORMANCE</div>
-                <div class="font-black text-lg">98/100</div>
-                <div class="text-xs font-bold">Lighthouse</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Floating badges -->
-        <div class="absolute -left-2 sm:-left-4 top-[18%] bg-white text-dark rounded-2xl px-3 py-3 shadow-xl flex items-center gap-3 border border-black/5">
-          <div class="w-9 h-9 rounded-xl bg-dark grid place-items-center text-white"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-          <div><div class="text-xs font-extrabold leading-none">Page Speed</div><div class="text-[11px] text-black/50 font-medium">+50% faster load</div></div>
-        </div>
-        <div class="absolute -right-2 sm:-right-3 bottom-[18%] bg-white text-dark rounded-2xl px-4 py-3 shadow-xl">
-          <div class="text-[11px] font-bold tracking-widest text-black/40">CLIENTS TRUST US</div>
-          <div class="flex items-center gap-2 mt-1">
-            <div class="flex -space-x-1"><span class="w-6 h-6 rounded-full bg-slate-800 border-2 border-white grid place-items-center text-[8px] text-white font-black">A</span><span class="w-6 h-6 rounded-full bg-cyan-500 border-2 border-white grid place-items-center text-[8px] text-white font-black">B</span><span class="w-6 h-6 rounded-full bg-violet-600 border-2 border-white grid place-items-center text-[8px] text-white font-black">C</span></div>
-            <span class="text-xs font-bold">+ 120 happy clients</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<div id="mobileMenu"><div><a href="#hero">Experience</a><a href="#menu">Menu 3D</a><a href="#ar">AR View</a><a href="#gallery">Gallery</a><br><button class="btn btn-orange" onclick="document.getElementById('mobileMenu').classList.remove('open')">Close</button></div></div>
 
-<!-- Logos strip -->
-<div class="border-y border-white/[0.06] bg-white/[0.02]">
-  <div class="max-w-[1200px] mx-auto px-6 lg:px-8 py-5 flex flex-wrap items-center justify-between gap-6 opacity-50">
-    <span class="text-[11px] tracking-[0.2em] font-bold text-white/50">TRUSTED BY INNOVATORS</span>
-    <div class="flex flex-wrap items-center gap-8 text-white font-bold tracking-tight text-sm">
-      <span class="flex items-center gap-2"><span class="w-6 h-6 rounded bg-white/10 grid place-items-center text-xs">◈</span> NEXUS</span>
-      <span class="flex items-center gap-2"><span class="w-6 h-6 rounded bg-white/10 grid place-items-center text-xs">⬢</span> BLOOM</span>
-      <span>ATLAS & CO.</span>
-      <span class="flex items-center gap-2"><span class="w-6 h-6 rounded-full border border-white/20 grid place-items-center text-[10px]">○</span> LUMEN</span>
-      <span>VERTEX</span>
-    </div>
-  </div>
+<main>
+<section id="hero">
+<div>
+<div class="eyebrow"><span class="dot"></span> Live • WebGL + AR Motion System</div>
+<div class="hero-kicker">The restaurant menu, <em>reimagined as cinema</em></div>
+<h1 id="heroTitle"><span class="line"><span>TASTE IN</span></span><span class="line"><span class="outline">AUGMENTED</span></span><span class="line"><span class="grad">REALITY ✦</span></span></h1>
+<p class="hero-desc">Point your phone. Watch dishes <strong>erupt off the table in 3D</strong> — steam, spin, sizzle. <strong>armenu.art</strong> turns every plate into motion graphics. Drag the scene, click the dish, switch plates below.</p>
+<div class="hero-cta"><a href="#menu" class="btn btn-solid magnetic">Explore 3D Menu →</a><a href="#ar" class="btn magnetic">◉ How AR works</a></div>
+<div class="hero-meta"><div><div class="meta-num"><span class="count" data-to="120">0</span>+</div><div class="meta-label">3D Dishes</div></div><div><div class="meta-num"><span class="count" data-to="48">0</span>k</div><div class="meta-label">AR Scans</div></div><div><div class="meta-num"><span class="count" data-to="98">0</span>%</div><div class="meta-label">Wow Rate</div></div></div>
 </div>
-
-<!-- Services -->
-<section id="services" class="max-w-[1200px] mx-auto px-6 lg:px-8 py-16 lg:py-24">
-  <div class="flex flex-wrap justify-between items-end gap-6">
-    <div>
-      <div class="text-accent font-mono text-xs tracking-widest font-bold">01 — SERVICES</div>
-      <h2 class="mt-3 font-black tracking-[-0.03em] text-white text-[32px] sm:text-[42px] leading-none">Built for growth,<br>designed to convert.</h2>
-    </div>
-    <p class="text-white/50 max-w-[380px] text-[14.5px] leading-relaxed">Every service is tailored to your goals — no templates, no shortcuts. Just strategic design that works.</p>
-  </div>
-
-  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
-    <!-- Card 1 -->
-    <div class="reveal bg-card border border-line rounded-[20px] p-6 card-hover">
-      <div class="w-10 h-10 rounded-xl bg-[#0F1419] border border-line grid place-items-center text-lg">🎨</div>
-      <h3 class="mt-4 font-bold text-white text-[16px]">Custom Web Design</h3>
-      <p class="mt-2 text-[13.5px] leading-relaxed text-white/50">Bespoke designs that capture your brand and captivate your audience. Figma to reality.</p>
-      <a href="#contact" class="mt-4 inline-flex text-accent text-xs font-bold tracking-widest hover:text-cyan-300">LEARN MORE →</a>
-    </div>
-    <div class="reveal bg-card border border-line rounded-[20px] p-6 card-hover" style="transition-delay:.05s">
-      <div class="w-10 h-10 rounded-xl bg-[#0F1419] border border-line grid place-items-center text-lg">⚡</div>
-      <h3 class="mt-4 font-bold text-white text-[16px]">Development</h3>
-      <p class="mt-2 text-[13.5px] leading-relaxed text-white/50">Lightning-fast, clean code built for performance, SEO and scale. Next.js & modern stack.</p>
-      <a href="#contact" class="mt-4 inline-flex text-accent text-xs font-bold tracking-widest hover:text-cyan-300">LEARN MORE →</a>
-    </div>
-    <div class="reveal bg-card border border-line rounded-[20px] p-6 card-hover" style="transition-delay:.1s">
-      <div class="w-10 h-10 rounded-xl bg-[#0F1419] border border-line grid place-items-center text-lg">🛒</div>
-      <h3 class="mt-4 font-bold text-white text-[16px]">E-commerce</h3>
-      <p class="mt-2 text-[13.5px] leading-relaxed text-white/50">Stores that sell. Seamless checkout, inventory and payments that drive revenue.</p>
-      <a href="#contact" class="mt-4 inline-flex text-accent text-xs font-bold tracking-widest hover:text-cyan-300">LEARN MORE →</a>
-    </div>
-    <div class="reveal bg-card border border-line rounded-[20px] p-6 card-hover">
-      <div class="w-10 h-10 rounded-xl bg-[#0F1419] border border-line grid place-items-center text-lg">🚀</div>
-      <h3 class="mt-4 font-bold text-white text-[16px]">Performance</h3>
-      <p class="mt-2 text-[13.5px] leading-relaxed text-white/50">Core Web Vitals 95+ guaranteed. Speed is a feature — and a ranking factor.</p>
-      <a href="#contact" class="mt-4 inline-flex text-accent text-xs font-bold tracking-widest hover:text-cyan-300">LEARN MORE →</a>
-    </div>
-    <div class="reveal bg-card border border-line rounded-[20px] p-6 card-hover" style="transition-delay:.05s">
-      <div class="w-10 h-10 rounded-xl bg-[#0F1419] border border-line grid place-items-center text-lg">💎</div>
-      <h3 class="mt-4 font-bold text-white text-[16px]">Brand Strategy</h3>
-      <p class="mt-2 text-[13.5px] leading-relaxed text-white/50">Positioning, voice and visuals aligned to make you unmistakable in your market.</p>
-      <a href="#contact" class="mt-4 inline-flex text-accent text-xs font-bold tracking-widest hover:text-cyan-300">LEARN MORE →</a>
-    </div>
-    <div class="reveal bg-card border border-line rounded-[20px] p-6 card-hover" style="transition-delay:.1s">
-      <div class="w-10 h-10 rounded-xl bg-[#0F1419] border border-line grid place-items-center text-lg">🛡️</div>
-      <h3 class="mt-4 font-bold text-white text-[16px]">Ongoing Support</h3>
-      <p class="mt-2 text-[13.5px] leading-relaxed text-white/50">Launch is day one. Updates, monitoring and growth experiments included.</p>
-      <a href="#contact" class="mt-4 inline-flex text-accent text-xs font-bold tracking-widest hover:text-cyan-300">LEARN MORE →</a>
-    </div>
-  </div>
-</section>
-
-<!-- Portfolio -->
-<section id="work" class="bg-[#0B0F13] border-y border-white/[0.06]">
-  <div class="max-w-[1200px] mx-auto px-6 lg:px-8 py-16 lg:py-20">
-    <div class="flex flex-wrap justify-between items-end gap-6">
-      <div>
-        <div class="text-accent font-mono text-xs tracking-widest font-bold">02 — SELECTED WORK</div>
-        <h2 class="mt-3 font-black tracking-[-0.03em] text-white text-[32px] sm:text-[42px] leading-none">Real results for<br>ambitious brands.</h2>
-      </div>
-      <div class="flex gap-2 flex-wrap" id="filters">
-        <button data-filter="all" class="filter-btn active bg-white text-dark font-bold px-4 py-2 rounded-full text-xs">All</button>
-        <button data-filter="web" class="filter-btn bg-white/10 border border-white/10 text-white/70 hover:text-white font-semibold px-4 py-2 rounded-full text-xs">Web Design</button>
-        <button data-filter="ecommerce" class="filter-btn bg-white/10 border border-white/10 text-white/70 hover:text-white font-semibold px-4 py-2 rounded-full text-xs">E-commerce</button>
-        <button data-filter="saas" class="filter-btn bg-white/10 border border-white/10 text-white/70 hover:text-white font-semibold px-4 py-2 rounded-full text-xs">SaaS</button>
-      </div>
-    </div>
-
-    <div id="portfolioGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
-      <!-- Project 1 -->
-      <article data-cat="saas" class="portfolio-card group bg-card border border-line rounded-[20px] overflow-hidden card-hover cursor-pointer">
-        <div class="relative h-[190px] overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-          <span class="absolute top-3 left-3 bg-accent text-dark text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full">↗ +34% CONVERSION</span>
-        </div>
-        <div class="p-5">
-          <div class="flex gap-2 text-[10px] font-bold tracking-widest text-white/40"><span>SAAS</span><span>•</span><span>2024</span></div>
-          <h3 class="font-bold text-white mt-1">Flow Finance</h3>
-          <p class="text-white/50 text-[13px] mt-1 leading-relaxed">Fintech dashboard rebuilt for clarity and trust. Onboarding time cut in half.</p>
-          <div class="mt-3 flex gap-2"><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Next.js</span><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Fintech</span></div>
-        </div>
-      </article>
-      <!-- Project 2 -->
-      <article data-cat="ecommerce" class="portfolio-card group bg-card border border-line rounded-[20px] overflow-hidden card-hover cursor-pointer">
-        <div class="relative h-[190px] overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-          <span class="absolute top-3 left-3 bg-emerald-400 text-dark text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full">↗ 2.8X REVENUE</span>
-        </div>
-        <div class="p-5">
-          <div class="flex gap-2 text-[10px] font-bold tracking-widest text-white/40"><span>E-COMMERCE</span><span>•</span><span>2024</span></div>
-          <h3 class="font-bold text-white mt-1">Maison Atelier</h3>
-          <p class="text-white/50 text-[13px] mt-1 leading-relaxed">Luxury fashion store with headless commerce. Average order value +41%.</p>
-          <div class="mt-3 flex gap-2"><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Shopify</span><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Fashion</span></div>
-        </div>
-      </article>
-      <!-- Project 3 -->
-      <article data-cat="saas" class="portfolio-card group bg-card border border-line rounded-[20px] overflow-hidden card-hover cursor-pointer">
-        <div class="relative h-[190px] overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-          <span class="absolute top-3 left-3 bg-violet-400 text-dark text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full">↗ +50% PERFORMANCE</span>
-        </div>
-        <div class="p-5">
-          <div class="flex gap-2 text-[10px] font-bold tracking-widest text-white/40"><span>SAAS</span><span>•</span><span>2023</span></div>
-          <h3 class="font-bold text-white mt-1">Metric Labs</h3>
-          <p class="text-white/50 text-[13px] mt-1 leading-relaxed">Analytics platform with real-time insights. 10k+ active teams now onboard.</p>
-          <div class="mt-3 flex gap-2"><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">React</span><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Analytics</span></div>
-        </div>
-      </article>
-      <!-- Project 4 -->
-      <article data-cat="web" class="portfolio-card group bg-card border border-line rounded-[20px] overflow-hidden card-hover cursor-pointer">
-        <div class="relative h-[190px] overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-          <span class="absolute top-3 left-3 bg-amber-400 text-dark text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full">↗ +67% ENGAGEMENT</span>
-        </div>
-        <div class="p-5">
-          <div class="flex gap-2 text-[10px] font-bold tracking-widest text-white/40"><span>HOSPITALITY</span><span>•</span><span>2023</span></div>
-          <h3 class="font-bold text-white mt-1">Sora Dining</h3>
-          <p class="text-white/50 text-[13px] mt-1 leading-relaxed">Restaurant collective with immersive storytelling and seamless reservations.</p>
-          <div class="mt-3 flex gap-2"><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Web Design</span><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Hospitality</span></div>
-        </div>
-      </article>
-      <!-- Project 5 -->
-      <article data-cat="web" class="portfolio-card group bg-card border border-line rounded-[20px] overflow-hidden card-hover cursor-pointer">
-        <div class="relative h-[190px] overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&h=400&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-          <span class="absolute top-3 left-3 bg-cyan-300 text-dark text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full">↗ -41% BOUNCE RATE</span>
-        </div>
-        <div class="p-5">
-          <div class="flex gap-2 text-[10px] font-bold tracking-widest text-white/40"><span>ARCHITECTURE</span><span>•</span><span>2023</span></div>
-          <h3 class="font-bold text-white mt-1">Studio North</h3>
-          <p class="text-white/50 text-[13px] mt-1 leading-relaxed">Architecture portfolio that lets work breathe. Awards press coverage +3x.</p>
-          <div class="mt-3 flex gap-2"><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Minimal</span><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Portfolio</span></div>
-        </div>
-      </article>
-      <!-- Project 6 -->
-      <article data-cat="ecommerce" class="portfolio-card group bg-card border border-line rounded-[20px] overflow-hidden card-hover cursor-pointer">
-        <div class="relative h-[190px] overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-          <span class="absolute top-3 left-3 bg-white text-dark text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full">↗ 3.5K NEW LEADS</span>
-        </div>
-        <div class="p-5">
-          <div class="flex gap-2 text-[10px] font-bold tracking-widest text-white/40"><span>AGENCY</span><span>•</span><span>2024</span></div>
-          <h3 class="font-bold text-white mt-1">Brightside Co.</h3>
-          <p class="text-white/50 text-[13px] mt-1 leading-relaxed">Creative agency site that actually converts. Lead form completion +58%.</p>
-          <div class="mt-3 flex gap-2"><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Webflow</span><span class="text-[11px] bg-white/5 border border-white/10 text-white/60 px-2.5 py-1 rounded-full">Agency</span></div>
-        </div>
-      </article>
-    </div>
-    <div class="text-center mt-8">
-      <button id="viewAllBtn" class="text-sm font-bold text-white/60 hover:text-white border border-white/10 hover:border-white/20 rounded-full px-6 py-2.5 transition">View full archive →</button>
-    </div>
-  </div>
-</section>
-
-<!-- Pricing -->
-<section id="pricing" class="max-w-[1200px] mx-auto px-6 lg:px-8 py-16 lg:py-24">
-  <div class="text-center max-w-2xl mx-auto">
-    <div class="text-accent font-mono text-xs tracking-widest font-bold">03 — PRICING</div>
-    <h2 class="mt-3 font-black tracking-[-0.03em] text-white text-[32px] sm:text-[44px] leading-none">Transparent pricing.<br>No surprises.</h2>
-    <p class="mt-4 text-white/50 text-[14.5px]">Choose the level that fits where you are — upgrade as you grow.</p>
-    <div class="mt-6 inline-flex bg-card border border-line rounded-full p-1">
-      <button id="billMonthly" class="bg-white text-dark font-bold px-5 py-2 rounded-full text-sm shadow">Monthly</button>
-      <button id="billYearly" class="text-white/60 font-semibold px-5 py-2 rounded-full text-sm">Yearly <span class="text-emerald-400 font-bold">— 20% off</span></button>
-    </div>
-  </div>
-
-  <div class="grid lg:grid-cols-3 gap-6 mt-10 items-start">
-    <!-- Starter -->
-    <div class="bg-card border border-line rounded-[24px] p-7">
-      <h3 class="font-bold text-white text-lg">Starter</h3>
-      <p class="text-white/50 text-sm mt-1">Perfect for launching quickly.</p>
-      <div class="mt-5 flex items-baseline gap-1"><span class="text-white font-black text-[36px] tracking-tighter price" data-monthly="2499" data-yearly="1999">$2,499</span><span class="text-white/40 text-sm">/ project</span></div>
-      <p class="text-white/30 text-xs mt-1">One-time. Own everything.</p>
-      <a href="#contact" class="mt-6 block text-center bg-white text-dark font-bold py-3 rounded-full hover:bg-white/90 transition text-sm">Get Started</a>
-      <ul class="mt-6 space-y-3 text-[13px] text-white/70">
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> 5-page custom design</li>
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> CMS + blog setup</li>
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Basic SEO & analytics</li>
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> 2 weeks support</li>
-        <li class="flex gap-2 text-white/30"><span>✕</span> Advanced animations</li>
-      </ul>
-    </div>
-    <!-- Professional Popular -->
-    <div class="bg-card border-2 border-accent rounded-[24px] p-7 relative lg:scale-[1.02] shadow-[0_0_40px_rgba(6,182,214,0.15)]">
-      <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-dark text-[11px] font-black tracking-widest px-4 py-1 rounded-full">MOST POPULAR</span>
-      <h3 class="font-bold text-white text-lg flex items-center gap-2">Professional <span class="w-2 h-2 rounded-full bg-emerald-400"></span></h3>
-      <p class="text-white/50 text-sm mt-1">For brands ready to scale.</p>
-      <div class="mt-5 flex items-baseline gap-1"><span class="text-white font-black text-[36px] tracking-tighter price" data-monthly="5499" data-yearly="4399">$5,499</span><span class="text-white/40 text-sm">/ project</span></div>
-      <p class="text-white/30 text-xs mt-1">One-time. Own everything.</p>
-      <a href="#contact" class="mt-6 block text-center bg-accent hover:bg-cyan-400 text-dark font-bold py-3 rounded-full transition text-sm">Get Started →</a>
-      <ul class="mt-6 space-y-3 text-[13px] text-white/70">
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> 10-page custom design</li>
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Custom animations & interactions</li>
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Advanced SEO & performance 95+</li>
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> E-commerce or membership</li>
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> 60 days support & training</li>
-      </ul>
-    </div>
-    <!-- Enterprise -->
-    <div class="bg-card border border-line rounded-[24px] p-7">
-      <h3 class="font-bold text-white text-lg">Enterprise</h3>
-      <p class="text-white/50 text-sm mt-1">Custom solutions, no limits.</p>
-      <div class="mt-5 flex items-baseline gap-1"><span class="text-white font-black text-[36px] tracking-tighter">Custom</span></div>
-      <p class="text-white/30 text-xs mt-1">Tailored to your needs.</p>
-      <a href="#contact" class="mt-6 block text-center bg-white/10 border border-white/10 text-white font-bold py-3 rounded-full hover:bg-white/15 transition text-sm">Book a Call</a>
-      <ul class="mt-6 space-y-3 text-[13px] text-white/70">
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Unlimited pages & features</li>
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Design system & component library</li>
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Integrations & automation</li>
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Dedicated Slack & priority support</li>
-        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Ongoing optimization</li>
-      </ul>
-    </div>
-  </div>
-  <p class="text-center text-white/30 text-xs mt-6">Need something different? <a href="#contact" class="text-accent underline underline-offset-4">Let's build a custom package.</a></p>
-</section>
-
-<!-- Contact -->
-<section id="contact" class="bg-gradient-to-b from-[#0B0F13] to-[#0F1419] border-t border-white/[0.06]">
-  <div class="max-w-[1200px] mx-auto px-6 lg:px-8 py-16 lg:py-20">
-    <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10">
-      <!-- Form -->
-      <div class="bg-card border border-line rounded-[24px] p-6 sm:p-8">
-        <h3 class="font-black tracking-[-0.03em] text-white text-[26px] leading-none">Let's build something<br>great together.</h3>
-        <p class="text-white/50 text-sm mt-3">Tell me about your project. I'll reply within 24 hours.</p>
-        <form id="contactForm" class="mt-6 space-y-4" novalidate>
-          <div class="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label class="text-[11px] tracking-widest font-bold text-white/50">YOUR NAME</label>
-              <input required id="name" placeholder="Alex Morgan" class="mt-1.5 w-full bg-dark border border-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/20">
-              <p class="hidden text-red-400 text-xs mt-1" data-err="name">Please enter your name.</p>
-            </div>
-            <div>
-              <label class="text-[11px] tracking-widest font-bold text-white/50">EMAIL ADDRESS</label>
-              <input required id="email" type="email" placeholder="alex@company.com" class="mt-1.5 w-full bg-dark border border-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/20">
-              <p class="hidden text-red-400 text-xs mt-1" data-err="email">Please enter a valid email.</p>
-            </div>
-          </div>
-          <div class="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label class="text-[11px] tracking-widest font-bold text-white/50">PROJECT TYPE</label>
-              <select id="projectType" class="mt-1.5 w-full bg-dark border border-line rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-accent/50">
-                <option>Select a service</option><option>Web Design</option><option>Development</option><option>E-commerce</option><option>Brand Strategy</option>
-              </select>
-            </div>
-            <div>
-              <label class="text-[11px] tracking-widest font-bold text-white/50">BUDGET RANGE</label>
-              <select id="budget" class="mt-1.5 w-full bg-dark border border-line rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-accent/50">
-                <option>$2k — $5k</option><option>$5k — $10k</option><option>$10k — $25k</option><option>$25k+</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label class="text-[11px] tracking-widest font-bold text-white/50">PROJECT DETAILS</label>
-            <textarea id="details" rows="4" placeholder="Tell me about your goals, timeline, and what success looks like..." class="mt-1.5 w-full bg-dark border border-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/20 resize-none"></textarea>
-          </div>
-          <button type="submit" class="w-full bg-accent hover:bg-cyan-400 text-dark font-black py-4 rounded-full transition text-sm tracking-wide">Send Message →</button>
-          <p class="text-center text-white/30 text-xs">By sending, you agree to our privacy policy. No spam, ever.</p>
-        </form>
-      </div>
-      <!-- Info -->
-      <div class="space-y-6">
-        <div class="bg-gradient-to-br from-accent to-cyan-500 rounded-[24px] p-7 text-dark">
-          <div class="w-10 h-10 rounded-xl bg-dark text-white grid place-items-center">✦</div>
-          <h4 class="font-black text-xl tracking-tight mt-4 leading-none">Prefer to talk directly?</h4>
-          <p class="text-dark/70 text-sm mt-2 leading-relaxed">Book a free 30-min strategy call. No pitch, just honest advice on your next step.</p>
-          <div class="mt-6 space-y-3 text-sm font-semibold">
-            <a href="mailto:hello@frame.studio" class="flex items-center gap-3 bg-dark text-white rounded-full px-4 py-3"><span class="w-8 h-8 rounded-full bg-white/10 grid place-items-center text-xs">✉</span> hello@frame.studio</a>
-            <a href="tel:+14155552671" class="flex items-center gap-3 bg-white rounded-full px-4 py-3"><span class="w-8 h-8 rounded-full bg-dark text-white grid place-items-center text-xs">☎</span> +1 (415) 555-2671</a>
-          </div>
-          <button onclick="showToast('Calendar opened — pick a time that works for you!')" class="mt-4 w-full bg-dark text-white font-bold py-3 rounded-full text-sm">Schedule a Call →</button>
-        </div>
-        <div class="bg-card border border-line rounded-[24px] p-6">
-          <h4 class="font-bold text-white">What happens next?</h4>
-          <ol class="mt-4 space-y-4">
-            <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-accent text-dark grid place-items-center text-xs font-black">1</span><div><div class="text-white font-semibold text-sm">Quick reply</div><div class="text-white/50 text-xs">Within 24h with clear next steps.</div></div></li>
-            <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-white/10 text-white grid place-items-center text-xs font-black">2</span><div><div class="text-white font-semibold text-sm">Discovery call</div><div class="text-white/50 text-xs">30 min to align on goals & scope.</div></div></li>
-            <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-white/10 text-white grid place-items-center text-xs font-black">3</span><div><div class="text-white font-semibold text-sm">Proposal</div><div class="text-white/50 text-xs">Fixed price, timeline & deliverables.</div></div></li>
-          </ol>
-        </div>
-        <div class="flex items-center gap-3 text-xs text-white/40">
-          <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Avg. response time: 3 hours • 4.9/5 from 47 reviews
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer class="border-t border-white/10 bg-darker">
-  <div class="max-w-[1200px] mx-auto px-6 lg:px-8 py-10">
-    <div class="flex flex-col md:flex-row justify-between gap-8">
-      <div>
-        <div class="flex items-center gap-2 font-black tracking-tight text-white"><span class="w-8 h-8 rounded-lg bg-accent text-dark grid place-items-center text-xs">F■</span> FRAME</div>
-        <p class="text-white/40 text-sm mt-3 max-w-[320px] leading-relaxed">Custom websites that drive results. Strategy, design and code for ambitious brands.</p>
-      </div>
-      <div class="flex gap-10 text-sm">
-        <div><div class="font-bold text-white mb-3">Explore</div><div class="space-y-2 text-white/50"><a href="#work" class="block hover:text-white">Work</a><a href="#services" class="block hover:text-white">Services</a><a href="#pricing" class="block hover:text-white">Pricing</a></div></div>
-        <div><div class="font-bold text-white mb-3">Connect</div><div class="space-y-2 text-white/50"><a href="#" class="block hover:text-white">Twitter</a><a href="#" class="block hover:text-white">LinkedIn</a><a href="#" class="block hover:text-white">Dribbble</a></div></div>
-        <div><div class="font-bold text-white mb-3">Contact</div><div class="space-y-2 text-white/50"><a href="mailto:hello@frame.studio" class="block hover:text-white">hello@frame.studio</a><span class="block">San Francisco, CA</span></div></div>
-      </div>
-    </div>
-    <div class="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-3 text-xs text-white/30">
-      <span>© 2026 FRAME Studio. All rights reserved.</span>
-      <span class="flex gap-4"><a href="#" class="hover:text-white">Privacy</a><a href="#" class="hover:text-white">Terms</a><span>Crafted with precision in SF</span></span>
-    </div>
-  </div>
-</footer>
-
-<!-- Project Modal -->
-<div id="modal" class="fixed inset-0 z-[80] hidden">
-  <div id="modalBg" class="absolute inset-0 bg-dark/80 backdrop-blur-sm"></div>
-  <div class="relative max-w-[720px] mx-auto mt-10 sm:mt-20 bg-card border border-line rounded-[24px] overflow-hidden shadow-2xl mx-4">
-    <img id="modalImg" src="" class="w-full h-[280px] object-cover">
-    <div class="p-6 sm:p-8">
-      <div id="modalCat" class="text-accent font-mono text-xs tracking-widest font-bold">SAAS • 2024</div>
-      <h3 id="modalTitle" class="font-black text-white text-2xl mt-2">Flow Finance</h3>
-      <p id="modalDesc" class="text-white/60 mt-3 leading-relaxed">Extended case study with challenges, process and measurable outcomes. Includes before/after performance, conversion lifts and testimonial.</p>
-      <div class="mt-6 flex gap-3">
-        <a href="#contact" onclick="closeModal()" class="bg-accent text-dark font-bold px-6 py-3 rounded-full text-sm">Start Similar Project →</a>
-        <button onclick="closeModal()" class="border border-white/10 text-white px-6 py-3 rounded-full text-sm font-semibold hover:bg-white/5">Close</button>
-      </div>
-    </div>
-    <button onclick="closeModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-dark/80 border border-white/10 text-white grid place-items-center hover:bg-dark">✕</button>
-  </div>
+<div class="hero-visual">
+<div class="badge-rotate"><svg viewBox="0 0 100 100"><defs><path id="circ" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs><text style="font-size:10px;letter-spacing:2px;fill:#FFF6E9"><textPath href="#circ">DRAG • SPIN • TASTE • REPEAT • DRAG • </textPath></text></svg><div class="badge-center">🍔</div></div>
+<div class="dish-card" id="dishCard">
+<div class="dish-img-wrap"><img id="dishImg" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80" alt="dish"><div class="scan"></div><div class="scan-line"></div></div>
+<div class="dish-info"><div><div class="dish-tag" id="dishTag">No.01 — Smash Classic</div><div class="dish-name" id="dishName">Volcano Burger</div></div><div class="dish-price" id="dishPrice">$18</div></div>
+<p class="sec-sub" id="dishDesc" style="margin-top:.6rem;font-size:.9rem">Double smashed wagyu, molten cheddar lava, charred brioche. 360° steam in AR.</p>
+<div class="dish-nav"><button class="active" data-dish="0">01 Burger</button><button data-dish="1">02 Sushi</button><button data-dish="2">03 Cake</button></div>
 </div>
+<div class="hint">↔ drag to orbit • scroll to zoom • click dish for burst</div>
+</div>
+</section>
+
+<div class="marquee-full"><div class="marquee"><div class="marquee-track" id="mq1"><span>VOLCANO BURGER ✦</span><span>neon sushi set</span><span>CLOUD CAKE ✦</span><span>truffle ramen</span><span>SMOKED PIZZA ✦</span><span>galaxy cocktail</span><span>VOLCANO BURGER ✦</span><span>neon sushi set</span><span>CLOUD CAKE ✦</span><span>truffle ramen</span></div></div><div class="marquee marquee2"><div class="marquee-track"><span>SCAN • TAP • TASTE • REPEAT ✦ SCAN • TAP • TASTE • REPEAT ✦ SCAN • TAP • TASTE ✦&nbsp;</span><span>SCAN • TAP • TASTE • REPEAT ✦ SCAN • TAP • TASTE • REPEAT ✦ SCAN • TAP • TASTE ✦&nbsp;</span></div></div></div>
+
+<section id="menu">
+<div class="eyebrow"><span class="dot"></span> Motion Menu — 001 / 003</div>
+<h2 class="sec-title reveal">DISHES THAT <i>move,</i> STEAM & GLOW</h2>
+<p class="sec-sub reveal">Every card is linked to the 3D stage behind you. Hover to tilt, click order to fire particles in WebGL. Built with Three.js physical materials, dynamic lights and steam particles.</p>
+<div class="menu-grid">
+<div class="m-card tilt reveal"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80" alt=""><div class="m-body"><div class="m-top"><span class="m-cat">Fire • Burger</span><span class="m-price">$18</span></div><div class="m-name">Volcano Burger</div><div class="m-desc">Molten cheddar core, charcoal bun, kinetic sesame rain in AR.</div><div class="m-foot"><button class="order" data-order="Volcano Burger">Order in AR +</button><span class="ar-mini">◉ 3D + steam</span></div></div></div>
+<div class="m-card tilt reveal"><img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&q=80" alt=""><div class="m-body"><div class="m-top"><span class="m-cat">Neon • Sushi</span><span class="m-price">$24</span></div><div class="m-name">Tokyo Neon Set</div><div class="m-desc">Salmon levitates, rice glows, wasabi particles orbit your table.</div><div class="m-foot"><button class="order" data-order="Tokyo Neon Set">Order in AR +</button><span class="ar-mini">◉ 3D + orbit</span></div></div></div>
+<div class="m-card tilt reveal"><img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&q=80" alt=""><div class="m-body"><div class="m-top"><span class="m-cat">Cloud • Dessert</span><span class="m-price">$12</span></div><div class="m-name">Cloud Cake 3.0</div><div class="m-desc">Strawberry chrome glaze, floating cherry, sugar sparkle storm.</div><div class="m-foot"><button class="order" data-order="Cloud Cake">Order in AR +</button><span class="ar-mini">◉ 3D + sparkle</span></div></div></div>
+<div class="m-card tilt reveal"><img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80" alt=""><div class="m-body"><div class="m-top"><span class="m-cat">Smoke • Pizza</span><span class="m-price">$16</span></div><div class="m-name">Smoked Diavola</div><div class="m-desc">Wood-fire smoke simulation curls off the crust in real time.</div><div class="m-foot"><button class="order" data-order="Smoked Diavola">Order in AR +</button><span class="ar-mini">◉ 3D + smoke</span></div></div></div>
+<div class="m-card tilt reveal"><img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80" alt=""><div class="m-body"><div class="m-top"><span class="m-cat">Steam • Ramen</span><span class="m-price">$15</span></div><div class="m-name">Midnight Ramen</div><div class="m-desc">Broth ripples, noodles lift, chopsticks auto-play motion loop.</div><div class="m-foot"><button class="order" data-order="Midnight Ramen">Order in AR +</button><span class="ar-mini">◉ 3D + ripple</span></div></div></div>
+<div class="m-card tilt reveal"><img src="https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&q=80" alt=""><div class="m-body"><div class="m-top"><span class="m-cat">Glow • Bar</span><span class="m-price">$11</span></div><div class="m-name">Galaxy Spritz</div><div class="m-desc">Color-shifting liquid shader, ice refracts your room light.</div><div class="m-foot"><button class="order" data-order="Galaxy Spritz">Order in AR +</button><span class="ar-mini">◉ shader</span></div></div></div>
+</div>
+</section>
+
+<section id="ar"><div class="ar-inner">
+<div class="reveal"><div class="phone"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80" alt=""><div class="phone-ui"><div class="notch"></div><div class="ar-tag">● AR TRACKING • TABLE 07</div><div class="cal"><span>Volcano Burger — $18</span><span>360°</span></div></div><div class="scan"></div><div class="scan-line"></div></div></div>
+<div><div class="eyebrow"><span class="dot"></span> How armenu.art works</div><h2 class="sec-title reveal">POINT. <i>watch it</i> COOK ITSELF.</h2><div class="feat reveal"><div class="feat-num">01</div><div><h4>Scan the table marker</h4><p>No app needed. WebAR instantly anchors a cinematic 3D stage to your table with soft shadows and real-world lighting.</p></div></div><div class="feat reveal"><div class="feat-num">02</div><div><h4>Motion-graphic plating</h4><p>Ingredients fly in with kinetic typography, steam particles and sizzle sound design — like the website, but on your plate.</p></div></div><div class="feat reveal"><div class="feat-num">03</div><div><h4>Tap to customize & order</h4><p>Spin, explode, change glaze colors. Tap “Serve IRL” and the kitchen gets your exact AR build.</p></div></div><div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap"><button class="btn btn-orange magnetic" id="qrBtn">Get AR QR CODE</button><button class="btn magnetic" onclick="window.switchDish((window.currentDish+1)%3)">↻ Shuffle dish</button></div></div>
+</div></section>
+
+<section id="gallery">
+<div class="eyebrow"><span class="dot"></span> Live renders — motion studies</div>
+<h2 class="sec-title reveal">FROM SCREEN <i>to</i> TABLE</h2>
+<div class="gal reveal"><div><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80" alt=""><label>Fine dining — AR overlay</label></div><div><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80" alt=""><label>Plating study 01</label></div><div><img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80" alt=""><label>Bowl motion</label></div><div><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80" alt=""><label>Slice physics</label></div><div><img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80" alt=""><label>Color script</label></div></div>
+</section>
+</main>
+
+<footer><div class="eyebrow" style="margin:0 auto 1rem">● Ready for service</div><div class="foot-big">HUNGRY FOR<br><span>THE FUTURE?</span></div><div style="margin-top:2rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap"><button class="btn btn-orange magnetic" id="footAr">Launch AR Menu ✦</button><a href="#hero" class="btn magnetic">Back to top ↑</a></div><div class="foot-row"><span>© 2026 armenu.art — motion menu systems</span><span>WebGL • Three.js • WebAR • GSAP</span><span>Made to be tasted 👁‍🗨</span></div></footer>
+
+<div id="dock"><button class="d-btn active" data-dish="0" title="Burger">🍔</button><button class="d-btn" data-dish="1" title="Sushi">🍣</button><button class="d-btn" data-dish="2" title="Cake">🍰</button><span class="d-label">Speed</span><input type="range" id="speed" min="0" max="3" step="0.1" value="1"><button class="d-btn" id="wireBtn" title="Wireframe">◍</button><button class="d-btn" id="rotBtn" title="Auto-rotate" style="background:var(--lime)">⟳</button></div>
+
+<div id="modal"><div class="modal-card"><h3 style="font-family:Syne;font-size:1.6rem">SCAN TO TASTE IN AR</h3><p style="color:var(--muted);font-size:.9rem;margin-top:.4rem">Point your phone camera — dish appears on your table</p><div class="qr" id="qr"></div><div style="font-family:Syne;font-weight:800;letter-spacing:.2em">ARMENU.ART/TABLE-07</div><br><button class="btn btn-orange" style="width:100%;justify-content:center" onclick="document.getElementById('modal').classList.remove('open')">Done — I'm hungry</button></div></div>
 
 <script>
-const menuBtn = document.getElementById('menuBtn');
-const mobileMenu = document.getElementById('mobileMenu');
-menuBtn.addEventListener('click', ()=> mobileMenu.classList.toggle('hidden'));
+// QR fake pattern
+const qr=document.getElementById('qr');for(let i=0;i<81;i++){const s=document.createElement('i');if(Math.random()>.5)s.classList.add('w');if((i<20&&i%9<3)||(i<3*9&&i%9>5)||(i>54&&i%9<3))s.classList.remove('w');qr.appendChild(s);}
+// Preloader
+let p=0;const fill=document.getElementById('preFill'),cnt=document.getElementById('preCount');
+const pi=setInterval(()=>{p+=Math.random()*14;if(p>=100){p=100;clearInterval(pi);setTimeout(()=>{document.getElementById('preloader').classList.add('hide');gsap.from('#heroTitle .line span',{yPercent:110,duration:1.1,stagger:.12,ease:'power4.out',delay:.3});},400);}fill.style.width=p+'%';cnt.textContent=String(Math.floor(p)).padStart(2,'0')+'%';},140);
+// Cursor
+const dot=document.getElementById('cDot'),ring=document.getElementById('cRing');let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.16;ry+=(my-ry)*.16;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,.m-card').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('hover'));el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));});
+// Magnetic
+document.querySelectorAll('.magnetic').forEach(b=>{b.addEventListener('mousemove',e=>{const r=b.getBoundingClientRect();gsap.to(b,{x:(e.clientX-r.left-r.width/2)*.25,y:(e.clientY-r.top-r.height/2)*.25,duration:.4});});b.addEventListener('mouseleave',()=>gsap.to(b,{x:0,y:0,duration:.5,ease:'elastic.out(1,.4)'}));});
+// Tilt
+document.querySelectorAll('.tilt').forEach(c=>{c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(900px) rotateY(${x*12}deg) rotateX(${-y*12}deg) translateY(-6px)`;});c.addEventListener('mouseleave',()=>c.style.transform='perspective(900px)');});
+// GSAP scroll
+gsap.registerPlugin(ScrollTrigger);
+gsap.utils.toArray('.reveal').forEach(el=>{gsap.to(el,{opacity:1,y:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});});
+document.querySelectorAll('.count').forEach(el=>{const to=+el.dataset.to;ScrollTrigger.create({trigger:el,start:'top 90%',once:true,onEnter:()=>gsap.fromTo(el,{innerText:0},{innerText:to,duration:1.8,snap:{innerText:1},onUpdate:function(){el.textContent=Math.floor(+el.textContent);}})});});
+// Burger / modal / toast
+document.getElementById('burger').onclick=()=>document.getElementById('mobileMenu').classList.toggle('open');
+document.querySelectorAll('#mobileMenu a').forEach(a=>a.onclick=()=>document.getElementById('mobileMenu').classList.remove('open'));
+const modal=document.getElementById('modal');
+document.getElementById('qrBtn').onclick=()=>modal.classList.add('open');
+document.getElementById('footAr').onclick=()=>modal.classList.add('open');
+document.getElementById('tryArBtn').onclick=e=>{e.preventDefault();modal.classList.add('open');};
+modal.onclick=e=>{if(e.target===modal)modal.classList.remove('open');};
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2200);}
+document.querySelectorAll('.order').forEach(b=>b.onclick=()=>{toast('Added '+b.dataset.order+' to AR tray ✦');if(window.burst)window.burst();});
+</script>
 
-const toast = document.getElementById('toast');
-const toastMsg = document.getElementById('toastMsg');
-function showToast(msg){
-  toastMsg.textContent = msg;
-  toast.classList.remove('hidden');
-  setTimeout(()=> toast.classList.add('hidden'), 2800);
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const canvas=document.getElementById('webgl');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
+
+const scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x08080c,0.028);
+const camera=new THREE.PerspectiveCamera(45,innerWidth/innerHeight,.1,100);
+camera.position.set(0,2.2,10.5);
+const controls=new OrbitControls(camera,canvas);
+controls.enableDamping=true;controls.dampingFactor=.06;controls.enablePan=false;
+controls.minDistance=6;controls.maxDistance=16;controls.maxPolarAngle=Math.PI/1.7;controls.minPolarAngle=Math.PI/4;
+controls.autoRotate=true;controls.autoRotateSpeed=1.0;
+
+// Lights
+scene.add(new THREE.AmbientLight(0xfff2df,.55));
+const key=new THREE.DirectionalLight(0xffffff,2.2);key.position.set(5,8,5);key.castShadow=true;key.shadow.mapSize.set(1024,1024);scene.add(key);
+const p1=new THREE.PointLight(0xff4d00,40,30);p1.position.set(-5,3,3);scene.add(p1);
+const p2=new THREE.PointLight(0xff5c9e,35,30);p2.position.set(5,-1,4);scene.add(p2);
+const p3=new THREE.PointLight(0xd8ff3e,15,20);p3.position.set(0,5,-4);scene.add(p3);
+
+// Ground shadow catcher
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(40,40),new THREE.ShadowMaterial({opacity:.35}));
+ground.rotation.x=-Math.PI/2;ground.position.y=-2.6;ground.receiveShadow=true;scene.add(ground);
+const ringGlow=new THREE.Mesh(new THREE.RingGeometry(3.2,3.35,80),new THREE.MeshBasicMaterial({color:0xff4d00,transparent:true,opacity:.6,side:THREE.DoubleSide}));
+ringGlow.rotation.x=-Math.PI/2;ringGlow.position.y=-2.55;scene.add(ringGlow);
+const ring2=ringGlow.clone();ring2.geometry=new THREE.RingGeometry(4.1,4.15,80);ring2.material=ringGlow.material.clone();ring2.material.opacity=.25;ring2.material.color.set(0xd8ff3e);scene.add(ring2);
+
+// Helpers
+function mat(c,r=.35,m=.1,extra={}){return new THREE.MeshPhysicalMaterial({color:c,roughness:r,metalness:m,clearcoat:.6,clearcoatRoughness:.3,...extra});}
+function shadowed(g){g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});return g;}
+
+// DISH 1 — Burger
+function createBurger(){
+const g=new THREE.Group();
+const plate=new THREE.Mesh(new THREE.CylinderGeometry(3,2.6,.25,48),mat(0xf5efe6,.25,.05));plate.position.y=-1.4;g.add(plate);
+const rim=new THREE.Mesh(new THREE.TorusGeometry(2.9,.12,16,80),mat(0xff4d00,.3,.4));rim.rotation.x=Math.PI/2;rim.position.y=-1.35;g.add(rim);
+const bottom=new THREE.Mesh(new THREE.CylinderGeometry(1.7,1.5,.45,32),mat(0xe8a15a,.6));bottom.position.y=-.7;g.add(bottom);
+const patty=new THREE.Mesh(new THREE.CylinderGeometry(1.85,1.85,.4,32),mat(0x4a2412,.85));patty.position.y=-.3;g.add(patty);
+const cheese=new THREE.Mesh(new THREE.BoxGeometry(2.6,.12,2.6),mat(0xffc93c,.4));cheese.position.y=0;cheese.rotation.y=Math.PI/4;g.add(cheese);
+const lettuce=new THREE.Mesh(new THREE.TorusGeometry(1.7,.28,12,32),mat(0x7ddf4a,.6));lettuce.rotation.x=Math.PI/2;lettuce.position.y=.25;lettuce.scale.z=.5;g.add(lettuce);
+const tomato=new THREE.Mesh(new THREE.CylinderGeometry(1.6,1.6,.22,32),mat(0xff2e2e,.35));tomato.position.y=.5;g.add(tomato);
+const top=new THREE.Mesh(new THREE.SphereGeometry(1.7,32,20,0,Math.PI*2,0,Math.PI/2),mat(0xe8a15a,.55));top.position.y=.6;top.scale.y=.85;g.add(top);
+for(let i=0;i<14;i++){const s=new THREE.Mesh(new THREE.SphereGeometry(.09,8,8),mat(0xfff6e9,.5));const a=Math.random()*Math.PI*2,r=Math.random()*1.1;s.position.set(Math.cos(a)*r,.6+1.1+Math.random()*.3,Math.sin(a)*r);g.add(s);}
+return shadowed(g);
+}
+// DISH 2 — Sushi
+function createSushi(){
+const g=new THREE.Group();
+const plate=new THREE.Mesh(new THREE.CylinderGeometry(3,2.6,.22,48),mat(0x111116,.2,.6));plate.position.y=-1.4;g.add(plate);
+const rim=new THREE.Mesh(new THREE.TorusGeometry(2.9,.1,16,80),mat(0xd8ff3e,.3,.5));rim.rotation.x=Math.PI/2;rim.position.y=-1.35;g.add(rim);
+const colors=[0xff7a3d,0xff5c9e,0xffc93c,0x7ddfff];
+for(let i=0;i<4;i++){
+const s=new THREE.Group();
+const rice=new THREE.Mesh(new THREE.BoxGeometry(.9,.5,.7),mat(0xfff6e9,.6));s.add(rice);
+const fish=new THREE.Mesh(new THREE.CylinderGeometry(.42,.42,.9,20),mat(colors[i],.35));fish.rotation.z=Math.PI/2;fish.position.y=.45;s.add(fish);
+const nori=new THREE.Mesh(new THREE.BoxGeometry(.95,.18,.75),mat(0x0a0a0a,.7));nori.position.y=.05;s.add(nori);
+const x=(i%2? .85:-.85),z=(i<2? .7:-.7);s.position.set(x,-.7,z);s.rotation.y=x;g.add(s);
+}
+const wasabi=new THREE.Mesh(new THREE.IcosahedronGeometry(.35,1),mat(0x6fdc2a,.5));wasabi.position.set(0,-.6,0);g.add(wasabi);
+const ginger=new THREE.Mesh(new THREE.TorusKnotGeometry(.3,.1,60,10),mat(0xffb6c8,.4));ginger.position.set(0,-.2,0);g.add(ginger);
+g.userData.spin=[wasabi,ginger];return shadowed(g);
+}
+// DISH 3 — Cake
+function createDessert(){
+const g=new THREE.Group();
+const plate=new THREE.Mesh(new THREE.CylinderGeometry(3,2.6,.22,48),mat(0xf5efe6,.2));plate.position.y=-1.4;g.add(plate);
+const rim=new THREE.Mesh(new THREE.TorusGeometry(2.9,.12,16,80),mat(0xff5c9e,.3,.4));rim.rotation.x=Math.PI/2;rim.position.y=-1.35;g.add(rim);
+const cake=new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.5,1.1,40),mat(0xff8fb5,.35));cake.position.y=-.5;g.add(cake);
+const glaze=new THREE.Mesh(new THREE.CylinderGeometry(1.55,1.5,.35,40),mat(0xff2e7a,.15,.2,{clearcoat:1}));glaze.position.y=.15;g.add(glaze);
+const drip=new THREE.Mesh(new THREE.TorusGeometry(1.52,.14,12,40),mat(0xff2e7a,.2));drip.rotation.x=Math.PI/2;drip.position.y=0;g.add(drip);
+const cherry=new THREE.Mesh(new THREE.SphereGeometry(.32,20,20),mat(0xff0000,.15,.1,{clearcoat:1}));cherry.position.y=.75;g.add(cherry);
+for(let i=0;i<3;i++){const c=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,.9,12),mat(0xfff6e9,.5));const a=i/3*Math.PI*2;c.position.set(Math.cos(a)*.8,.6,Math.sin(a)*.8);g.add(c);const f=new THREE.Mesh(new THREE.SphereGeometry(.12,12,12),new THREE.MeshBasicMaterial({color:0xffd27a}));f.position.set(c.position.x,1.1,c.position.z);g.add(f);}
+return shadowed(g);
 }
 
-// Filters
-const filterBtns = document.querySelectorAll('.filter-btn');
-const cards = document.querySelectorAll('.portfolio-card');
-filterBtns.forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    filterBtns.forEach(b=>{
-      b.className='filter-btn bg-white/10 border border-white/10 text-white/70 hover:text-white font-semibold px-4 py-2 rounded-full text-xs';
-    });
-    btn.className='filter-btn active bg-white text-dark font-bold px-4 py-2 rounded-full text-xs';
-    const f = btn.dataset.filter;
-    cards.forEach(c=>{
-      const cat = c.dataset.cat;
-      const show = f==='all' || cat===f;
-      c.style.display = show ? '' : 'none';
-      if(show){ c.animate([{opacity:0, transform:'translateY(8px)'},{opacity:1, transform:'translateY(0)'}], {duration:300, easing:'ease-out'}) }
-    });
-  });
-});
+const dishes=[createBurger(),createSushi(),createDessert()];
+const stage=new THREE.Group();scene.add(stage);
+dishes.forEach((d,i)=>{d.visible=i===0;stage.add(d);});
+let current=0;window.currentDish=0;
+stage.position.y=.4;
 
-// Pricing toggle
-const billMonthly = document.getElementById('billMonthly');
-const billYearly = document.getElementById('billYearly');
-const prices = document.querySelectorAll('.price');
-function setBilling(mode){
-  if(mode==='monthly'){
-    billMonthly.className='bg-white text-dark font-bold px-5 py-2 rounded-full text-sm shadow';
-    billYearly.className='text-white/60 font-semibold px-5 py-2 rounded-full text-sm';
-    prices.forEach(p=> p.textContent = '$' + Number(p.dataset.monthly).toLocaleString());
-  } else {
-    billYearly.className='bg-white text-dark font-bold px-5 py-2 rounded-full text-sm shadow';
-    billMonthly.className='text-white/60 font-semibold px-5 py-2 rounded-full text-sm';
-    prices.forEach(p=> p.textContent = '$' + Number(p.dataset.yearly).toLocaleString());
-  }
+// Background deco
+const knot=new THREE.Mesh(new THREE.TorusKnotGeometry(7,.7,120,12),new THREE.MeshStandardMaterial({color:0xff4d00,wireframe:true,transparent:true,opacity:.08}));
+knot.position.set(0,0,-8);scene.add(knot);
+const ico=new THREE.Mesh(new THREE.IcosahedronGeometry(1.2,1),new THREE.MeshStandardMaterial({color:0xd8ff3e,wireframe:true,transparent:true,opacity:.35}));
+ico.position.set(-5,2,-2);scene.add(ico);
+const ico2=ico.clone();ico2.material=ico.material.clone();ico2.material.color.set(0xff5c9e);ico2.position.set(5,-1,-3);ico2.scale.setScalar(.7);scene.add(ico2);
+
+// Floating ingredients
+const floaters=[];
+const fGeo=[new THREE.TorusGeometry(.3,.12,10,20),new THREE.SphereGeometry(.22,12,12),new THREE.BoxGeometry(.4,.4,.4),new THREE.ConeGeometry(.22,.5,10)];
+const fCol=[0xff4d00,0xd8ff3e,0xff5c9e,0xffc93c,0xffffff];
+for(let i=0;i<26;i++){const m=new THREE.Mesh(fGeo[i%4],mat(fCol[i%5],.4,.2));m.position.set((Math.random()-.5)*14,(Math.random()-.5)*8,(Math.random()-.5)*6-1);m.userData={s:.4+Math.random()*.8,o:Math.random()*10};floaters.push(m);scene.add(m);}
+
+// Steam particles
+function makePoints(n,color,size,op){
+const geo=new THREE.BufferGeometry();const pos=new Float32Array(n*3);const vel=[];
+for(let i=0;i<n;i++){pos[i*3]=(Math.random()-.5)*4;pos[i*3+1]=Math.random()*5-1;pos[i*3+2]=(Math.random()-.5)*4;vel.push(.008+Math.random()*.02);}
+geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+const m=new THREE.PointsMaterial({color,size,transparent:true,opacity:op,depthWrite:false,blending:THREE.AdditiveBlending});
+const p=new THREE.Points(geo,m);p.userData.vel=vel;scene.add(p);return p;
 }
-billMonthly.addEventListener('click', ()=> setBilling('monthly'));
-billYearly.addEventListener('click', ()=> setBilling('yearly'));
+const steam=makePoints(220,0xffffff,.12,.45);
+const spark=makePoints(350,0xff8a00,.09,.9);
 
-// Reveal observer
-const observer = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible') });
-},{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=> observer.observe(el));
+// Burst system
+let bursts=[];
+window.burst=function(){
+const n=36;const geo=new THREE.SphereGeometry(.09,8,8);
+for(let i=0;i<n;i++){const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:[0xff4d00,0xd8ff3e,0xff5c9e,0xffffff][i%4],transparent:true}));m.position.copy(stage.position);m.position.y+=.5;const a=Math.random()*Math.PI*2,b=Math.random()*Math.PI;m.userData.v=new THREE.Vector3(Math.cos(a)*(.05+Math.random()*.12),Math.random()*.12+.04,Math.sin(a)*(.05+Math.random()*.12));m.userData.life=1;scene.add(m);bursts.push(m);}
+};
+canvas.addEventListener('pointerdown',e=>{window.burst();gsap.fromTo(stage.scale,{x:1,y:1,z:1},{x:1.08,y:.92,z:1.08,duration:.15,yoyo:true,repeat:1,ease:'power2.out'});});
 
-// Form
-const form = document.getElementById('contactForm');
-form.addEventListener('submit', e=>{
-  e.preventDefault();
-  let ok = true;
-  const name = document.getElementById('name');
-  const email = document.getElementById('email');
-  document.querySelectorAll('[data-err]').forEach(el=> el.classList.add('hidden'));
-  if(!name.value.trim()){ document.querySelector('[data-err="name"]').classList.remove('hidden'); ok=false; name.focus(); }
-  else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)){ document.querySelector('[data-err="email"]').classList.remove('hidden'); ok=false; email.focus(); }
-  if(!ok) return;
-  showToast('Message sent — I\'ll reply within 24 hours!');
-  form.reset();
-});
+// Dish data + switching
+const data=[
+{tag:'No.01 — Smash Classic',name:'Volcano Burger',price:'$18',desc:'Double smashed wagyu, molten cheddar lava, charred brioche. 360° steam in AR.',img:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80'},
+{tag:'No.02 — Tokyo Neon',name:'Neon Sushi Set',price:'$24',desc:'Levitating salmon nigiri, glowing rice, orbiting wasabi particles.',img:'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&q=80'},
+{tag:'No.03 — Sugar Cloud',name:'Cloud Cake 3.0',price:'$12',desc:'Chrome strawberry glaze, floating cherry, sugar sparkle storm.',img:'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&q=80'}];
+window.switchDish=function(i){
+if(i===current)return;const old=dishes[current];current=i;window.currentDish=i;
+gsap.to(old.scale,{x:.001,y:.001,z:.001,duration:.4,ease:'back.in(1.6)',onComplete:()=>{old.visible=false;old.scale.setScalar(1);const nw=dishes[i];nw.visible=true;nw.scale.setScalar(.001);nw.rotation.y=0;gsap.to(nw.scale,{x:1,y:1,z:1,duration:.8,ease:'elastic.out(1,.55)'});window.burst();}});
+document.querySelectorAll('[data-dish]').forEach(b=>b.classList.toggle('active',+b.dataset.dish===i));
+const d=data[i];gsap.to('#dishCard',{y:14,opacity:0,duration:.25,onComplete:()=>{
+document.getElementById('dishTag').textContent=d.tag;document.getElementById('dishName').textContent=d.name;document.getElementById('dishPrice').textContent=d.price;document.getElementById('dishDesc').textContent=d.desc;document.getElementById('dishImg').src=d.img;
+gsap.to('#dishCard',{y:0,opacity:1,duration:.5,ease:'power3.out'});}});
+p1.color.set(i===0?0xff4d00:i===1?0x00e5ff:0xff5c9e);
+};
+document.querySelectorAll('[data-dish]').forEach(b=>b.onclick=()=>window.switchDish(+b.dataset.dish));
 
-// Modal
-const modal = document.getElementById('modal');
-const modalImg = document.getElementById('modalImg');
-const modalTitle = document.getElementById('modalTitle');
-const modalDesc = document.getElementById('modalDesc');
-const modalCat = document.getElementById('modalCat');
-function openModal(card){
-  const img = card.querySelector('img').src;
-  const title = card.querySelector('h3').textContent;
-  const desc = card.querySelector('p').textContent;
-  const cat = card.querySelector('.text-\\[10px\\]').textContent;
-  modalImg.src = img;
-  modalTitle.textContent = title;
-  modalCat.textContent = cat;
-  modalDesc.textContent = desc + ' — Full case study includes research, wireframes, design system, development notes and post-launch metrics. Let\'s build the next success story together.';
-  modal.classList.remove('hidden');
-  document.body.style.overflow='hidden';
+// Dock controls
+let speedF=1;
+document.getElementById('speed').oninput=e=>{speedF=+e.target.value;controls.autoRotateSpeed=speedF*1.2;};
+let wire=false;document.getElementById('wireBtn').onclick=e=>{wire=!wire;e.currentTarget.classList.toggle('active',wire);scene.traverse(o=>{if(o.isMesh&&o.material&&'wireframe' in o.material)o.material.wireframe=wire;});};
+let rot=true;document.getElementById('rotBtn').onclick=e=>{rot=!rot;controls.autoRotate=rot;e.currentTarget.style.background=rot?'var(--lime)':'transparent';e.currentTarget.style.color=rot?'#000':'var(--cream)';};
+
+// Animate
+const clock=new THREE.Clock();
+function tick(){
+requestAnimationFrame(tick);
+const t=clock.getElapsedTime();
+controls.update();
+stage.rotation.y+=.006*speedF;
+stage.position.y=.4+Math.sin(t*1.4)*.25;
+dishes.forEach((d,i)=>{if(d.visible){d.rotation.y+=.002*speedF; d.position.y=Math.sin(t*2+i)*.08;}});
+if(dishes[1].visible&&dishes[1].userData.spin)dishes[1].userData.spin.forEach((o,k)=>{o.rotation.y+=.02;o.rotation.x+=.01;});
+floaters.forEach(f=>{f.rotation.x+=.008*f.userData.s;f.rotation.y+=.01*f.userData.s;f.position.y+=Math.sin(t+f.userData.o)*.003;});
+knot.rotation.y+=.0008*speedF;knot.rotation.z+=.0005;ico.rotation.x+=.01;ico.rotation.y+=.012;ico2.rotation.y-=.01;
+ringGlow.rotation.z+=.003;ring2.rotation.z-=.002;
+const sp=steam.geometry.attributes.position;for(let i=0;i<sp.count;i++){let y=sp.getY(i)+steam.userData.vel[i]*speedF;if(y>4)y=-1.5;sp.setY(i,y);sp.setX(i,sp.getX(i)+Math.sin(t*2+i)*.002);}sp.needsUpdate=true;
+const sp2=spark.geometry.attributes.position;for(let i=0;i<sp2.count;i++){sp2.setY(i,sp2.getY(i)+Math.sin(t*3+i)*.004);sp2.setX(i,sp2.getX(i)+.003*speedF);if(sp2.getX(i)>7)sp2.setX(i,-7);}sp2.needsUpdate=true;
+bursts=bursts.filter(m=>{m.position.add(m.userData.v);m.userData.v.y-=.003;m.userData.life-=.02;m.material.opacity=Math.max(0,m.userData.life);m.scale.setScalar(Math.max(.01,m.userData.life));if(m.userData.life<=0){scene.remove(m);return false;}return true;});
+// scroll parallax
+const sy=scrollY||0;camera.position.y=2.2+sy*.0006;stage.rotation.x=Math.min(.4,sy*.00025);
+renderer.render(scene,camera);
 }
-function closeModal(){
-  modal.classList.add('hidden');
-  document.body.style.overflow='';
-}
-document.querySelectorAll('.portfolio-card').forEach(c=> c.addEventListener('click', ()=> openModal(c)));
-document.getElementById('modalBg').addEventListener('click', closeModal);
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
-
-document.getElementById('viewAllBtn').addEventListener('click', ()=>{
-  showToast('Full archive coming soon — 24+ projects!');
-});
-
-// Navbar scroll
-const navbar = document.getElementById('navbar');
-window.addEventListener('scroll', ()=>{
-  if(window.scrollY>10) navbar.classList.add('shadow-lg');
-  else navbar.classList.remove('shadow-lg');
-});
-
-// Close mobile on link
-document.querySelectorAll('#mobileMenu a').forEach(a=> a.addEventListener('click', ()=> mobileMenu.classList.add('hidden')));
+tick();
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
 </script>
 </body>
 </html>
